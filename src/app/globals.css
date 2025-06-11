@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --color-kafuffle-primary: #D90240;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
