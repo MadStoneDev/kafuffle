@@ -2,8 +2,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
-
-import { StyledToaster } from "@/hooks/use-toast";
+import { Toaster } from "react-hot-toast";
 
 const lexend = Lexend({ subsets: ["latin"] });
 
@@ -39,7 +38,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${lexend.className} antialiased`}>
         {children}
-        <StyledToaster />
+        <Toaster />
       </body>
     </html>
   );
