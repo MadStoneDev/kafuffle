@@ -1,6 +1,5 @@
 ﻿import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
-  Plus,
   Smile,
   Paperclip,
   Send,
@@ -10,7 +9,10 @@ import {
   MoreHorizontal,
   Edit,
   Trash2,
+  Users,
 } from "lucide-react";
+import { IconCirclePlusFilled, IconCircleXFilled } from "@tabler/icons-react";
+import { formatDate, formatTime } from "@/utils/general";
 
 // Types for the chat component
 interface ChatMessage {
@@ -82,34 +84,6 @@ const MessageItem: React.FC<{
   const [showActions, setShowActions] = useState(false);
   const isOwnMessage = message.user_id === currentUserId;
 
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    if (date.toDateString() === today.toDateString()) {
-      return "Today";
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return "Yesterday";
-    } else {
-      return date.toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    }
-  };
-
   const getUserColor = (userId: string) => {
     // Generate consistent color based on user ID
     const colors = [
@@ -131,30 +105,32 @@ const MessageItem: React.FC<{
   return (
     <>
       {showDateSeparator && (
-        <div className="flex items-center justify-center my-4">
-          <div className="flex-1 h-px bg-gray-600"></div>
-          <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm mx-4">
+        <div className={`mx-4 flex items-center justify-center`}>
+          <div className={`flex-1 h-px bg-neutral-700`} />
+          <span
+            className={`mx-2 px-2 pt-0.5 pb-1 border border-neutral-500 text-neutral-400 rounded-full text-xs font-light`}
+          >
             {formatDate(messageDate)}
           </span>
-          <div className="flex-1 h-px bg-gray-600"></div>
+          <div className={`flex-1 h-px bg-neutral-700`} />
         </div>
       )}
 
       <div
-        className={`group px-4 py-1 hover:bg-gray-800/50 ${
-          isFirstInGroup ? "mt-4" : ""
+        className={`group py-4 px-4 py-1 hover:bg-neutral-800/50 ${
+          isFirstInGroup ? "" : ""
         }`}
         onMouseEnter={() => setShowActions(true)}
         onMouseLeave={() => setShowActions(false)}
       >
         {/* Reply indicator */}
         {replyToMessage && isFirstInGroup && (
-          <div className="flex items-center text-xs text-gray-400 mb-1 ml-10">
+          <div className="flex items-center text-xs text-neutral-400 mb-1 ml-10">
             <Reply className="w-3 h-3 mr-1" />
             <span className="hover:underline cursor-pointer">
               Replying to {replyToUser?.username || "Unknown User"}
             </span>
-            <span className="ml-2 text-gray-500 truncate max-w-xs">
+            <span className="ml-2 text-neutral-500 truncate max-w-xs">
               {replyToMessage.content}
             </span>
           </div>
@@ -162,33 +138,19 @@ const MessageItem: React.FC<{
 
         <div className="flex">
           {/* Avatar (only show for first message in group) */}
-          <div className="w-10 mr-3 flex-shrink-0">
+          <div className="w-8 mr-3 flex-shrink-0">
             {isFirstInGroup && (
               <div className="relative">
                 {user?.avatar_url ? (
                   <img
                     src={user.avatar_url}
                     alt={user.username}
-                    className="w-10 h-10 rounded-full"
+                    className="w-8 h-8 rounded-full"
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-kafuffle-primary flex items-center justify-center text-white font-semibold">
+                  <div className="w-8 h-8 rounded-full bg-kafuffle-primary flex items-center justify-center text-white">
                     {user?.username?.charAt(0).toUpperCase() || "?"}
                   </div>
-                )}
-
-                {user?.status && (
-                  <div
-                    className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-gray-800 ${
-                      user.status === "online"
-                        ? "bg-green-500"
-                        : user.status === "away"
-                          ? "bg-yellow-500"
-                          : user.status === "busy"
-                            ? "bg-red-500"
-                            : "bg-gray-500"
-                    }`}
-                  />
                 )}
               </div>
             )}
@@ -197,27 +159,33 @@ const MessageItem: React.FC<{
           {/* Message content */}
           <div className="flex-1 min-w-0">
             {isFirstInGroup && (
-              <div className="flex items-baseline gap-2 mb-1">
+              <div className="flex items-baseline gap-2">
                 <span
-                  className={`font-medium ${getUserColor(message.user_id)}`}
+                  className={`text-xs font-bold ${getUserColor(
+                    message.user_id,
+                  )}`}
                 >
                   {user?.username || "Unknown User"}
                 </span>
                 {user?.roles && user.roles.length > 0 && (
-                  <span className="text-xs bg-kafuffle-primary/20 text-kafuffle-primary px-1 rounded">
+                  <span
+                    className={`px-1 text-xs bg-kafuffle-primary/20 text-kafuffle-primary`}
+                  >
                     {user.roles[0]}
                   </span>
                 )}
-                <span className="text-xs text-gray-400">
+                <span className="text-xs font-light text-neutral-500">
                   {formatTime(message.created_at)}
                 </span>
                 {message.edited_at && (
-                  <span className="text-xs text-gray-500">(edited)</span>
+                  <span className="text-xs text-neutral-500">(edited)</span>
                 )}
               </div>
             )}
 
-            <div className="text-gray-200 text-sm leading-relaxed">
+            <div
+              className={`mt-0.5 text-neutral-300 text-xs font-normal leading-relaxed`}
+            >
               {message.content}
             </div>
           </div>
@@ -227,7 +195,7 @@ const MessageItem: React.FC<{
             <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <button
                 onClick={() => onReply(message)}
-                className="p-1 hover:bg-gray-700 rounded text-gray-400 hover:text-white"
+                className="p-1 hover:bg-neutral-700 rounded text-neutral-400 hover:text-white"
                 title="Reply"
               >
                 <Reply className="w-4 h-4" />
@@ -236,7 +204,7 @@ const MessageItem: React.FC<{
               {isOwnMessage && onEdit && (
                 <button
                   onClick={() => onEdit(message)}
-                  className="p-1 hover:bg-gray-700 rounded text-gray-400 hover:text-white"
+                  className="p-1 hover:bg-neutral-700 rounded text-neutral-400 hover:text-white"
                   title="Edit"
                 >
                   <Edit className="w-4 h-4" />
@@ -246,14 +214,14 @@ const MessageItem: React.FC<{
               {isOwnMessage && onDelete && (
                 <button
                   onClick={() => onDelete(message)}
-                  className="p-1 hover:bg-gray-700 rounded text-gray-400 hover:text-red-400"
+                  className="p-1 hover:bg-neutral-700 rounded text-neutral-400 hover:text-red-400"
                   title="Delete"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               )}
 
-              <button className="p-1 hover:bg-gray-700 rounded text-gray-400 hover:text-white">
+              <button className="p-1 hover:bg-neutral-700 rounded text-neutral-400 hover:text-white">
                 <MoreHorizontal className="w-4 h-4" />
               </button>
             </div>
@@ -273,6 +241,7 @@ const MessageInput: React.FC<{
   replyTo?: ChatMessage | null;
   onCancelReply?: () => void;
   disabled?: boolean;
+  users: Map<string, ChatUser>; // Add this prop
 }> = ({
   value,
   onChange,
@@ -282,37 +251,56 @@ const MessageInput: React.FC<{
   replyTo,
   onCancelReply,
   disabled,
+  users, // Add this prop
 }) => {
+  // Look up the user being replied to
+  const replyToUser = replyTo ? users.get(replyTo.user_id) : null;
+
   return (
-    <div className="p-4">
+    <div className={`p-4`}>
       {/* Reply preview */}
       {replyTo && (
-        <div className="mb-2 p-2 bg-gray-700 rounded-t-lg border-l-4 border-kafuffle-primary">
-          <div className="flex items-center justify-between">
-            <div className="text-xs text-gray-300">
-              Replying to <span className="font-medium">@user</span>
+        <div className={`space-y-2`}>
+          <div
+            className={`py-1 px-2 flex flex-col bg-kafuffle-primary/30 border-l-[3px] border-kafuffle-primary text-sm text-neutral-50`}
+          >
+            <div className={`flex items-center gap-2 font-bold`}>
+              {replyToUser?.username || "Unknown User"}
+              <span className={`text-xs text-neutral-50/60 font-light`}>
+                {formatDate(replyTo.created_at)} at{" "}
+                {formatTime(replyTo.created_at)}
+              </span>
+            </div>
+            <span className={`font-light truncate`}>{replyTo.content}</span>
+          </div>
+
+          <div
+            className={`px-2 py-3 flex items-center justify-between bg-neutral-800 rounded-t-lg border border-b-0 border-neutral-700`}
+          >
+            <div className="text-xs text-neutral-300 font-light">
+              Replying to{" "}
+              <span className="font-bold">
+                {replyToUser?.username || "Unknown User"}
+              </span>
             </div>
             <button
               onClick={onCancelReply}
-              className="text-gray-400 hover:text-white"
+              className="text-neutral-400 hover:text-white"
             >
-              ✕
+              <IconCircleXFilled size={20} />
             </button>
-          </div>
-          <div className="text-sm text-gray-400 truncate">
-            {replyTo.content}
           </div>
         </div>
       )}
 
-      {/* Input area */}
+      {/* Rest of the component stays the same */}
       <div
-        className={`flex items-end space-x-3 bg-gray-700 rounded-lg p-3 ${
+        className={`p-2 flex items-center space-x-3 bg-neutral-900 rounded-lg border border-neutral-700 ${
           replyTo ? "rounded-t-none" : ""
         }`}
       >
-        <button className="text-gray-400 hover:text-white p-1 rounded">
-          <Plus className="w-5 h-5" />
+        <button className="text-neutral-400 hover:text-white p-1 rounded">
+          <IconCirclePlusFilled size={24} />
         </button>
 
         <div className="flex-1">
@@ -322,17 +310,17 @@ const MessageInput: React.FC<{
             onKeyPress={onKeyPress}
             placeholder={placeholder}
             disabled={disabled}
-            className="w-full bg-transparent text-white placeholder-gray-400 resize-none focus:outline-none text-sm"
+            className="w-full bg-transparent text-white placeholder-neutral-500 resize-none focus:outline-none text-sm font-light"
             rows={1}
             style={{ maxHeight: "200px" }}
           />
         </div>
 
         <div className="flex items-center space-x-2">
-          <button className="text-gray-400 hover:text-white p-1 rounded">
+          <button className="text-neutral-400 hover:text-white p-1 rounded">
             <Paperclip className="w-5 h-5" />
           </button>
-          <button className="text-gray-400 hover:text-white p-1 rounded">
+          <button className="text-neutral-400 hover:text-white p-1 rounded">
             <Smile className="w-5 h-5" />
           </button>
 
@@ -470,10 +458,10 @@ export const EnhancedChat: React.FC<EnhancedChatProps> = ({
   const getContextIcon = () => {
     switch (context.type) {
       case "channel":
-        return <Hash className="w-5 h-5 text-gray-400 mr-2" />;
+        return <Hash className="w-5 h-5 text-neutral-400 mr-2" />;
       case "dm":
       case "group":
-        return <AtSign className="w-5 h-5 text-gray-400 mr-2" />;
+        return <AtSign className="w-5 h-5 text-neutral-400 mr-2" />;
       default:
         return null;
     }
@@ -496,26 +484,26 @@ export const EnhancedChat: React.FC<EnhancedChatProps> = ({
   if (loading) {
     return (
       <div
-        className={`flex items-center justify-center h-full bg-gray-900 ${className}`}
+        className={`flex items-center justify-center h-full bg-neutral-900 ${className}`}
       >
-        <div className="text-gray-400">Loading messages...</div>
+        <div className="text-neutral-400">Loading messages...</div>
       </div>
     );
   }
 
   return (
-    <div className={`flex flex-col h-full bg-gray-900 ${className}`}>
+    <div className={`flex flex-col h-full bg-neutral-900 ${className}`}>
       {/* Welcome message for empty channels */}
       {messages.length === 0 && (
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-neutral-700 rounded-full flex items-center justify-center mx-auto mb-4">
               {getContextIcon()}
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
               Welcome to #{context.name}!
             </h3>
-            <p className="text-gray-400">
+            <p className="text-neutral-400">
               {context.type === "channel"
                 ? "This is the start of the conversation in this channel."
                 : "This is the beginning of your direct message history."}
@@ -526,7 +514,7 @@ export const EnhancedChat: React.FC<EnhancedChatProps> = ({
 
       {/* Messages */}
       {messages.length > 0 && (
-        <div className="flex-1 overflow-y-auto" ref={messagesContainerRef}>
+        <div className={`flex-1 overflow-y-auto`} ref={messagesContainerRef}>
           {/* Load more button */}
           {hasMoreMessages && (
             <div className="text-center p-4">
@@ -580,6 +568,7 @@ export const EnhancedChat: React.FC<EnhancedChatProps> = ({
         replyTo={replyTo}
         onCancelReply={() => setReplyTo(null)}
         disabled={sending}
+        users={users} // Add this line
       />
     </div>
   );

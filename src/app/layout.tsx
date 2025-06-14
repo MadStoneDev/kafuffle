@@ -3,6 +3,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
 
+import { StyledToaster } from "@/hooks/use-toast";
+
 const lexend = Lexend({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -35,7 +37,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${lexend.className} antialiased`}>{children}</body>
+      <body className={`${lexend.className} antialiased`}>
+        {children}
+        <StyledToaster />
+      </body>
     </html>
   );
 }
