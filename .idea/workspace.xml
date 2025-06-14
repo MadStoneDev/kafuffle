@@ -5,27 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11ad73e1-3d19-4a7b-b0c0-c4eb472d5693" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/auth/confirm/route.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/auth/page.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2yUmWyta21M2EJGZVjbvZHWNiWf" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -44,7 +47,9 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "terminal",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\richa\\AppData\\Roaming\\npm\\node_modules\\prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "ts.external.directory.path": "G:\\Development-Sandbox\\_Rumblebuffin\\kafuffle\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -71,6 +76,8 @@
       <option name="presentableId" value="Default" />
       <updated>1749897566973</updated>
       <workItem from="1749897569597" duration="359000" />
+      <workItem from="1749897961249" duration="1346000" />
+      <workItem from="1749899990976" duration="3021000" />
     </task>
     <servers />
   </component>
