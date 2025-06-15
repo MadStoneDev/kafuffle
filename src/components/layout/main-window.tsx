@@ -28,6 +28,8 @@ export default function MainWindow({
   if (!selectedSpaceId) {
     return <SpacesList onSelectSpace={onSelectSpace} />;
   } else {
+    selectedZoneId = selectedZoneId ? selectedZoneId : "1";
+
     return (
       <SpaceView
         spaceId={selectedSpaceId}
