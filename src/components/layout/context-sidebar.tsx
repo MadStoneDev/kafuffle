@@ -34,7 +34,7 @@ export default function ContextSidebar({
     <nav
       className={`px-4 absolute md:relative ${
         isOpen ? "right-0" : "-right-full md:right-0"
-      } top-0 bottom-0 flex flex-col items-center dark:bg-kafuffle-primary rounded-l-4xl shadow-2xl shadow-black transition-all duration-500 ease-in-out`}
+      } top-0 bottom-0 flex flex-col items-center bg-kafuffle-primary rounded-l-4xl shadow-2xl shadow-black text-neutral-50 transition-all duration-500 ease-in-out`}
     >
       <section className={`py-4 flex gap-4`}>
         <button

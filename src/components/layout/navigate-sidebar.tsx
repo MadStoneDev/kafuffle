@@ -9,9 +9,11 @@ import {
   IconNotification,
   IconPower,
   IconSettings,
+  IconSun,
   IconUserFilled,
 } from "@tabler/icons-react";
 import { View } from "@/types";
+import DarkModeToggle from "@/components/layout/dark-mode-toggle";
 
 interface NavigateSidebarProps {
   isOpen: boolean;
@@ -30,7 +32,7 @@ export default function NavigateSidebar({
     <nav
       className={`absolute md:relative ${
         isOpen ? "left-0" : "-left-full md:left-0"
-      } top-0 bottom-0 flex flex-col items-center justify-between bg-neutral-50 dark:bg-black transition-all duration-500 ease-in-out`}
+      } top-0 bottom-0 flex flex-col items-center justify-between bg-black text-neutral-50 transition-all duration-500 ease-in-out`}
     >
       <section className={`flex-grow flex flex-col gap-2`}>
         <div
@@ -68,6 +70,8 @@ export default function NavigateSidebar({
       </section>
 
       <section className={`flex flex-col gap-2`}>
+        <DarkModeToggle />
+
         <div className={`w-full h-px bg-neutral-50/20`} />
         <div
           className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full hover:text-neutral-50 transition-all duration-500 ease-in-out`}

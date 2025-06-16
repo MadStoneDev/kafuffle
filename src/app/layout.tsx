@@ -2,6 +2,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
+import ThemeProvider from "@/components/providers/theme-provider";
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -24,7 +25,7 @@ export default function RootLayout({
       <body
         className={`bg-neutral-100 dark:bg-black/95 text-neutral-900 dark:text-neutral-200 ${lexend.className} antialiased`}
       >
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

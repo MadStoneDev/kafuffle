@@ -5,7 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11ad73e1-3d19-4a7b-b0c0-c4eb472d5693" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/layout/main-window.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/main-window.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layout/context-sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/context-sidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layout/focus-sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/focus-sidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layout/navigate-sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/navigate-sidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/spaces/spaces-list.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/spaces/spaces-list.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,8 +23,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -78,7 +86,7 @@
       <workItem from="1749897961249" duration="1346000" />
       <workItem from="1749899990976" duration="4633000" />
       <workItem from="1749989318311" duration="6080000" />
-      <workItem from="1749996224530" duration="80000" />
+      <workItem from="1749996224530" duration="6666000" />
     </task>
     <servers />
   </component>
