@@ -6,12 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="11ad73e1-3d19-4a7b-b0c0-c4eb472d5693" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/account/notifications.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/account/notifications.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/layout/app-container.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/app-container.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/context-sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/context-sidebar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/discover-sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/discover-sidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layout/main-window.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/main-window.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layout/navigate-sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/navigate-sidebar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/spaces/spaces-list.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/spaces/spaces-list.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +84,7 @@
       <workItem from="1749899990976" duration="4633000" />
       <workItem from="1749989318311" duration="6080000" />
       <workItem from="1749996224530" duration="17730000" />
-      <workItem from="1750198829337" duration="352000" />
+      <workItem from="1750198829337" duration="2410000" />
     </task>
     <servers />
   </component>

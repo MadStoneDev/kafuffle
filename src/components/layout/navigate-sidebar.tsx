@@ -1,15 +1,11 @@
 import { JSX } from "react";
 import {
   IconArrowsRightLeft,
-  IconBell,
   IconBellFilled,
-  IconHelp,
   IconHelpCircleFilled,
   IconInfoCircleFilled,
-  IconNotification,
   IconPower,
   IconSettings,
-  IconSun,
   IconUserFilled,
 } from "@tabler/icons-react";
 import { View } from "@/types";
@@ -32,9 +28,13 @@ export default function NavigateSidebar({
     <nav
       className={`absolute md:relative ${
         isOpen ? "left-0" : "-left-full md:left-0"
-      } top-0 bottom-0 flex flex-col items-center justify-between bg-black text-neutral-50 transition-all duration-500 ease-in-out`}
+      } top-0 bottom-0 flex flex-col items-center justify-between bg-black ${currentView === "profile" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out z-50`}
     >
-      <section className={`flex-grow flex flex-col gap-2`}>
+      <div
+        onClick={() => onOpen(false)}
+        className={`fixed top-0 right-0 bottom-0 left-0 bg-black ${isOpen ? "pointer-events-auto sm:pointer-events-none opacity-30 sm:opacity-0" : "pointer-events-none opacity-0"} transition-all duration-500 ease-in-out z-10`}
+      />
+      <section className={`flex-grow flex flex-col gap-2 z-20`}>
         <div
           className={`grid place-content-center w-10 h-10 transition-all duration-500 ease-in-out`}
         >
@@ -44,26 +44,29 @@ export default function NavigateSidebar({
         <div className={`w-full h-px bg-neutral-50/20`} />
 
         <div
-          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full hover:text-neutral-50 transition-all duration-500 ease-in-out`}
           onClick={() => onViewChange("profile")}
+          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "profile" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
         >
           <IconUserFilled />
         </div>
 
         <div
-          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full hover:text-neutral-50 transition-all duration-500 ease-in-out`}
+          onClick={() => onViewChange("notifications")}
+          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "notifications" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
         >
           <IconBellFilled />
         </div>
 
         <div
-          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full hover:text-neutral-50 transition-all duration-500 ease-in-out`}
+          onClick={() => onViewChange("help")}
+          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "help" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
         >
           <IconHelpCircleFilled />
         </div>
 
         <div
-          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full hover:text-neutral-50 transition-all duration-500 ease-in-out`}
+          onClick={() => onViewChange("about")}
+          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "about" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
         >
           <IconInfoCircleFilled />
         </div>
@@ -73,19 +76,24 @@ export default function NavigateSidebar({
         <DarkModeToggle />
 
         <div className={`w-full h-px bg-neutral-50/20`} />
+
         <div
-          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full hover:text-neutral-50 transition-all duration-500 ease-in-out`}
+          onClick={() => onViewChange("settings")}
+          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "settings" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
         >
           <IconSettings />
         </div>
+
         <div
-          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full hover:text-neutral-50 transition-all duration-500 ease-in-out`}
+          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full text-neutral-50 transition-all duration-500 ease-in-out`}
         >
           <IconArrowsRightLeft />
         </div>
+
         <div className={`w-full h-px bg-neutral-50/20`} />
+
         <div
-          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full hover:text-neutral-50 transition-all duration-500 ease-in-out`}
+          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full text-neutral-50 transition-all duration-500 ease-in-out`}
         >
           <IconPower />
         </div>

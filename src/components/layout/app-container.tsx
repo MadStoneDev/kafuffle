@@ -32,6 +32,7 @@ export default function AppContainer() {
         selectedSpaceId={selectedSpaceId}
         selectedZoneId={selectedZoneId}
         currentView={currentView}
+        onViewChange={setCurrentView}
         onSelectSpace={setSelectedSpaceId}
         onSelectZone={setSelectedZoneId}
       />

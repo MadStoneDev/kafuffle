@@ -44,7 +44,7 @@ export default function SpacesList({ onSelectSpace }: SpacesListProps) {
 
   return (
     <div
-      className={`flex-grow p-6 bg-neutral-50 dark:bg-neutral-800 rounded-4xl`}
+      className={`flex-grow p-6 bg-neutral-50 dark:bg-neutral-800/80 rounded-4xl`}
     >
       <div className={`mx-auto`}>
         <header className={`mb-4`}>
