@@ -37,16 +37,18 @@ export default function AppContainer() {
       />
 
       {/* Context (Discover/Focus) Sidebar */}
-      <ContextSidebar
-        isOpen={contextSidebarOpen}
-        onOpen={setContextSidebarOpen}
-        selectedSpaceId={selectedSpaceId}
-        selectedZoneId={selectedZoneId}
-        onSelectSpace={setSelectedSpaceId}
-        onSelectZone={setSelectedZoneId}
-        currentView={currentView}
-        onViewChange={setCurrentView}
-      />
+      {currentView === "spaces" && (
+        <ContextSidebar
+          isOpen={contextSidebarOpen}
+          onOpen={setContextSidebarOpen}
+          selectedSpaceId={selectedSpaceId}
+          selectedZoneId={selectedZoneId}
+          onSelectSpace={setSelectedSpaceId}
+          onSelectZone={setSelectedZoneId}
+          currentView={currentView}
+          onViewChange={setCurrentView}
+        />
+      )}
     </main>
   );
 }
