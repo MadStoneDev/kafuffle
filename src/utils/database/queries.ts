@@ -1,8 +1,8 @@
 ﻿// /utils/database/queries.ts
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 
 export async function getUserSpaces(userId: string) {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const { data: spaces, error } = await supabase
     .from("spaces")
@@ -27,7 +27,7 @@ export async function getUserSpaces(userId: string) {
 }
 
 export async function getSpaceZones(spaceId: string) {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const { data: zones, error } = await supabase
     .from("zones")
@@ -45,7 +45,7 @@ export async function getZoneMessages(
   limit = 50,
   before?: string,
 ) {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   let query = supabase
     .from("messages")

@@ -425,7 +425,7 @@ export async function initializeUserData() {
       .limit(1);
 
     if (existingSpaces && existingSpaces.length > 0) {
-      return { success: true, message: "User already has data" };
+      return { success: true, message: "User already has data", error: null };
     }
 
     // Create initial space
@@ -464,7 +464,11 @@ export async function initializeUserData() {
       );
     }
 
-    return { success: true, message: "Initial data created successfully" };
+    return {
+      success: true,
+      message: "Initial data created successfully",
+      error: null,
+    };
   } catch (error: any) {
     console.error("Failed to initialize user data:", error);
     return { success: false, error: error.message };

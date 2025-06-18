@@ -120,7 +120,7 @@ export function useAppState() {
 
       // If not, get the default zone
       if (!zoneId) {
-        zoneId = await getDefaultZoneForSpace(spaceId);
+        zoneId = (await getDefaultZoneForSpace(spaceId)) || "";
       }
 
       setState((prev) => ({

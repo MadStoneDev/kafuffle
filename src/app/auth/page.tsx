@@ -198,13 +198,13 @@ export default function GetAccessPage() {
   }, [otpSent]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-3xl font-bold text-neutral-900">
             {otpSent ? "Enter verification code" : "Get access"}
           </h1>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-neutral-600">
             {otpSent
               ? `We've sent a 6-digit code to ${email}`
               : "Sign in or create an account with your email"}
@@ -311,7 +311,7 @@ export default function GetAccessPage() {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-neutral-300 placeholder-gray-500 text-neutral-900 focus:outline-none focus:ring-kafuffle-primary focus:border-kafuffle-primary focus:z-10 sm:text-sm"
+                className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-neutral-300 placeholder-neutral-500 text-neutral-900 focus:outline-none focus:ring-kafuffle-primary focus:border-kafuffle-primary focus:z-10 sm:text-sm"
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

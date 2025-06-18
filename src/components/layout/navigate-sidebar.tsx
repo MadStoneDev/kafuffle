@@ -1,3 +1,4 @@
+// /components/layout/navigate-sidebar.tsx
 import { JSX } from "react";
 import {
   IconArrowsRightLeft,
@@ -6,9 +7,11 @@ import {
   IconInfoCircleFilled,
   IconPower,
   IconSettings,
+  IconUser,
   IconUserFilled,
 } from "@tabler/icons-react";
 import { View } from "@/types";
+import { createClient } from "@/utils/supabase/client";
 import DarkModeToggle from "@/components/layout/dark-mode-toggle";
 
 interface NavigateSidebarProps {
@@ -16,6 +19,7 @@ interface NavigateSidebarProps {
   onOpen: (open: boolean) => void;
   currentView: View;
   onViewChange: (view: View) => void;
+  isAuthenticated: boolean;
 }
 
 export default function NavigateSidebar({
@@ -23,7 +27,16 @@ export default function NavigateSidebar({
   onOpen,
   currentView,
   onViewChange,
+  isAuthenticated,
 }: NavigateSidebarProps): JSX.Element {
+  const handleLogout = async () => {
+    if (confirm("Are you sure you want to log out?")) {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      window.location.href = "/";
+    }
+  };
+
   return (
     <nav
       className={`absolute md:relative ${
@@ -43,20 +56,27 @@ export default function NavigateSidebar({
 
         <div className={`w-full h-px bg-neutral-50/20`} />
 
-        <div
-          onClick={() => onViewChange("profile")}
-          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "profile" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
-        >
-          <IconUserFilled />
-        </div>
+        {/* Profile - only show when authenticated */}
+        {isAuthenticated && (
+          <div
+            onClick={() => onViewChange("profile")}
+            className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "profile" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
+          >
+            <IconUserFilled />
+          </div>
+        )}
 
-        <div
-          onClick={() => onViewChange("notifications")}
-          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "notifications" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
-        >
-          <IconBellFilled />
-        </div>
+        {/* Notifications - only show when authenticated */}
+        {isAuthenticated && (
+          <div
+            onClick={() => onViewChange("notifications")}
+            className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "notifications" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
+          >
+            <IconBellFilled />
+          </div>
+        )}
 
+        {/* Help - always available */}
         <div
           onClick={() => onViewChange("help")}
           className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "help" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
@@ -64,6 +84,7 @@ export default function NavigateSidebar({
           <IconHelpCircleFilled />
         </div>
 
+        {/* About - always available */}
         <div
           onClick={() => onViewChange("about")}
           className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "about" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
@@ -77,26 +98,48 @@ export default function NavigateSidebar({
 
         <div className={`w-full h-px bg-neutral-50/20`} />
 
-        <div
-          onClick={() => onViewChange("settings")}
-          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "settings" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
-        >
-          <IconSettings />
-        </div>
+        {/* Settings - only show when authenticated */}
+        {isAuthenticated && (
+          <div
+            onClick={() => onViewChange("settings")}
+            className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "settings" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
+          >
+            <IconSettings />
+          </div>
+        )}
 
-        <div
-          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full text-neutral-50 transition-all duration-500 ease-in-out`}
-        >
-          <IconArrowsRightLeft />
-        </div>
+        {/* Account Switcher - only show when authenticated */}
+        {isAuthenticated && (
+          <div
+            className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full text-neutral-50 transition-all duration-500 ease-in-out`}
+          >
+            <IconArrowsRightLeft />
+          </div>
+        )}
 
-        <div className={`w-full h-px bg-neutral-50/20`} />
+        {/* Logout - only show when authenticated */}
+        {isAuthenticated && (
+          <>
+            <div className={`w-full h-px bg-neutral-50/20`} />
+            <div
+              onClick={handleLogout}
+              className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-red-500 rounded-full text-neutral-50 transition-all duration-500 ease-in-out`}
+            >
+              <IconPower />
+            </div>
+          </>
+        )}
 
-        <div
-          className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full text-neutral-50 transition-all duration-500 ease-in-out`}
-        >
-          <IconPower />
-        </div>
+        {/* Login prompt when not authenticated */}
+        {!isAuthenticated && (
+          <div
+            onClick={() => (window.location.href = "/auth")}
+            className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full text-neutral-50 transition-all duration-500 ease-in-out`}
+            title="Sign In"
+          >
+            <IconUser />
+          </div>
+        )}
       </section>
     </nav>
   );
