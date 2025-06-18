@@ -7,6 +7,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import { View } from "@/types";
+import ZonesList from "@/components/zones/zones-list";
 
 interface FocusSidebarProps {
   selectedSpaceId: string | null;
@@ -23,7 +24,7 @@ export default function FocusSidebar({
 }: FocusSidebarProps) {
   return (
     <>
-      <section className={`py-4 flex gap-4`}>
+      <section className={`px-4 py-4 flex gap-4`}>
         <button
           onClick={() => {
             onViewChange("members");
@@ -63,27 +64,11 @@ export default function FocusSidebar({
 
       <div className={`w-full h-px bg-neutral-50/30`} />
 
-      <section className={`py-4 flex flex-col items-start gap-6 w-full`}>
-        <div className={`flex items-center gap-2`}>
-          <IconMessage size={20} />
-          <span>zone-one</span>
-        </div>
-
-        <div className={`flex items-center gap-2`}>
-          <IconMessage size={20} />
-          <span>zone-two</span>
-        </div>
-
-        <div className={`flex items-center gap-2`}>
-          <IconMessage size={20} />
-          <span>zone-three</span>
-        </div>
-
-        <div className={`flex items-center gap-2`}>
-          <IconTable size={20} />
-          zone-one
-        </div>
-      </section>
+      <ZonesList
+        selectedSpaceId={selectedSpaceId}
+        selectedZoneId={selectedZoneId}
+        onSelectZone={onSelectZone}
+      />
     </>
   );
 }

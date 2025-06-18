@@ -9,67 +9,442 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      boards: {
+      calendar_events: {
         Row: {
-          created_at: string
+          attendees: string[] | null
+          created_at: string | null
+          created_by: string
           description: string | null
+          end_time: string | null
           id: string
-          name: string
-          project_id: string
+          is_all_day: boolean | null
+          location: string | null
+          recurrence_rule: string | null
+          space_id: string
+          start_time: string
+          title: string
+          updated_at: string | null
         }
         Insert: {
-          created_at?: string
+          attendees?: string[] | null
+          created_at?: string | null
+          created_by: string
           description?: string | null
+          end_time?: string | null
           id?: string
-          name: string
-          project_id: string
+          is_all_day?: boolean | null
+          location?: string | null
+          recurrence_rule?: string | null
+          space_id: string
+          start_time: string
+          title: string
+          updated_at?: string | null
         }
         Update: {
-          created_at?: string
+          attendees?: string[] | null
+          created_at?: string | null
+          created_by?: string
           description?: string | null
+          end_time?: string | null
           id?: string
-          name?: string
-          project_id?: string
+          is_all_day?: boolean | null
+          location?: string | null
+          recurrence_rule?: string | null
+          space_id?: string
+          start_time?: string
+          title?: string
+          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "boards_project_id_fkey"
-            columns: ["project_id"]
+            foreignKeyName: "calendar_events_created_by_fkey"
+            columns: ["created_by"]
             isOneToOne: false
-            referencedRelation: "projects"
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calendar_events_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
             referencedColumns: ["id"]
           },
         ]
       }
-      card_assignments: {
+      display_names: {
         Row: {
-          assigned_at: string
-          card_id: string
+          created_at: string | null
+          display_name: string
+          id: string
+          space_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          display_name: string
+          id?: string
+          space_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          display_name?: string
+          id?: string
+          space_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "display_names_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flow_cards: {
+        Row: {
+          assignee_id: string | null
+          column_id: string
+          created_at: string | null
+          created_by: string
+          description: string | null
+          due_date: string | null
+          id: string
+          labels: string[] | null
+          position: number | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          assignee_id?: string | null
+          column_id: string
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          labels?: string[] | null
+          position?: number | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          assignee_id?: string | null
+          column_id?: string
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          labels?: string[] | null
+          position?: number | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flow_cards_assignee_id_fkey"
+            columns: ["assignee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flow_cards_column_id_fkey"
+            columns: ["column_id"]
+            isOneToOne: false
+            referencedRelation: "flow_columns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flow_cards_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flow_columns: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          flow_id: string
+          id: string
+          name: string
+          position: number | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          flow_id: string
+          id?: string
+          name: string
+          position?: number | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          flow_id?: string
+          id?: string
+          name?: string
+          position?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flow_columns_flow_id_fkey"
+            columns: ["flow_id"]
+            isOneToOne: false
+            referencedRelation: "flows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flow_permissions: {
+        Row: {
+          created_at: string | null
+          flow_id: string
+          group_id: string | null
+          id: string
+          is_allow: boolean | null
+          permission_id: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          flow_id: string
+          group_id?: string | null
+          id?: string
+          is_allow?: boolean | null
+          permission_id: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          flow_id?: string
+          group_id?: string | null
+          id?: string
+          is_allow?: boolean | null
+          permission_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flow_permissions_flow_id_fkey"
+            columns: ["flow_id"]
+            isOneToOne: false
+            referencedRelation: "flows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flow_permissions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "member_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flow_permissions_permission_id_fkey"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flow_permissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flows: {
+        Row: {
+          archived_at: string | null
+          created_at: string | null
+          created_by: string
+          description: string | null
+          id: string
+          name: string
+          position: number | null
+          settings: Json | null
+          space_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          archived_at?: string | null
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          id?: string
+          name: string
+          position?: number | null
+          settings?: Json | null
+          space_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          archived_at?: string | null
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          id?: string
+          name?: string
+          position?: number | null
+          settings?: Json | null
+          space_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flows_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flows_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_permissions: {
+        Row: {
+          group_id: string
+          permission_id: string
+        }
+        Insert: {
+          group_id: string
+          permission_id: string
+        }
+        Update: {
+          group_id?: string
+          permission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_permissions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "member_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_permissions_permission_id_fkey"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "permissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media_files: {
+        Row: {
+          created_at: string | null
+          dimensions: Json | null
+          duration: number | null
+          file_name: string
+          file_size: number | null
+          id: string
+          message_id: string | null
+          mime_type: string | null
+          storage_url: string
+          thumbnail_url: string | null
+          uploaded_by: string
+        }
+        Insert: {
+          created_at?: string | null
+          dimensions?: Json | null
+          duration?: number | null
+          file_name: string
+          file_size?: number | null
+          id?: string
+          message_id?: string | null
+          mime_type?: string | null
+          storage_url: string
+          thumbnail_url?: string | null
+          uploaded_by: string
+        }
+        Update: {
+          created_at?: string | null
+          dimensions?: Json | null
+          duration?: number | null
+          file_name?: string
+          file_size?: number | null
+          id?: string
+          message_id?: string | null
+          mime_type?: string | null
+          storage_url?: string
+          thumbnail_url?: string | null
+          uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_files_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "media_files_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      member_group_users: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string
+          group_id: string
           id: string
           user_id: string
         }
         Insert: {
-          assigned_at?: string
-          card_id: string
+          assigned_at?: string | null
+          assigned_by: string
+          group_id: string
           id?: string
           user_id: string
         }
         Update: {
-          assigned_at?: string
-          card_id?: string
+          assigned_at?: string | null
+          assigned_by?: string
+          group_id?: string
           id?: string
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "card_assignments_card_id_fkey"
-            columns: ["card_id"]
+            foreignKeyName: "member_group_users_assigned_by_fkey"
+            columns: ["assigned_by"]
             isOneToOne: false
-            referencedRelation: "cards"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "card_assignments_user_id_fkey"
+            foreignKeyName: "member_group_users_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "member_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "member_group_users_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -77,449 +452,271 @@ export type Database = {
           },
         ]
       }
-      cards: {
+      member_groups: {
         Row: {
-          created_at: string
-          created_by: string
-          description: string | null
-          due_date: string | null
-          id: string
-          list_id: string
-          position: number
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          created_by: string
-          description?: string | null
-          due_date?: string | null
-          id?: string
-          list_id: string
-          position?: number
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          created_by?: string
-          description?: string | null
-          due_date?: string | null
-          id?: string
-          list_id?: string
-          position?: number
-          title?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cards_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cards_list_id_fkey"
-            columns: ["list_id"]
-            isOneToOne: false
-            referencedRelation: "lists"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      channel_permissions: {
-        Row: {
-          channel_id: string | null
+          color: string | null
           created_at: string | null
+          created_by: string
           id: string
-          permissions: Json | null
-          role_id: string | null
-        }
-        Insert: {
-          channel_id?: string | null
-          created_at?: string | null
-          id?: string
-          permissions?: Json | null
-          role_id?: string | null
-        }
-        Update: {
-          channel_id?: string | null
-          created_at?: string | null
-          id?: string
-          permissions?: Json | null
-          role_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "channel_permissions_channel_id_fkey"
-            columns: ["channel_id"]
-            isOneToOne: false
-            referencedRelation: "channels"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "channel_permissions_role_id_fkey"
-            columns: ["role_id"]
-            isOneToOne: false
-            referencedRelation: "project_roles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      channels: {
-        Row: {
-          channel_type: string | null
-          created_at: string
-          description: string | null
-          id: string
+          is_mentionable: boolean | null
           name: string
-          position: number
-          project_id: string
-          section_id: string | null
-          type: string | null
-        }
-        Insert: {
-          channel_type?: string | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          name: string
-          position?: number
-          project_id: string
-          section_id?: string | null
-          type?: string | null
-        }
-        Update: {
-          channel_type?: string | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          name?: string
-          position?: number
-          project_id?: string
-          section_id?: string | null
-          type?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "channels_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "projects"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "channels_section_id_fkey"
-            columns: ["section_id"]
-            isOneToOne: false
-            referencedRelation: "sections"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      conversation_participants: {
-        Row: {
-          conversation_id: string | null
-          id: string
-          joined_at: string | null
-          left_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          conversation_id?: string | null
-          id?: string
-          joined_at?: string | null
-          left_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          conversation_id?: string | null
-          id?: string
-          joined_at?: string | null
-          left_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "conversation_participants_conversation_id_fkey"
-            columns: ["conversation_id"]
-            isOneToOne: false
-            referencedRelation: "conversations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "conversation_participants_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      conversations: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          id: string
-          name: string | null
-          type: string
+          permission_template_id: string | null
+          position: number | null
+          space_id: string
           updated_at: string | null
         }
         Insert: {
+          color?: string | null
           created_at?: string | null
-          created_by?: string | null
+          created_by: string
           id?: string
-          name?: string | null
-          type: string
+          is_mentionable?: boolean | null
+          name: string
+          permission_template_id?: string | null
+          position?: number | null
+          space_id: string
           updated_at?: string | null
         }
         Update: {
+          color?: string | null
           created_at?: string | null
-          created_by?: string | null
-          id?: string
-          name?: string | null
-          type?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "conversations_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      documents: {
-        Row: {
-          content: Json | null
-          created_at: string
-          created_by: string
-          id: string
-          project_id: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          content?: Json | null
-          created_at?: string
-          created_by: string
-          id?: string
-          project_id: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          content?: Json | null
-          created_at?: string
           created_by?: string
           id?: string
-          project_id?: string
-          title?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "documents_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "documents_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "projects"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      events: {
-        Row: {
-          created_at: string
-          created_by: string
-          description: string | null
-          end_time: string
-          id: string
-          project_id: string
-          start_time: string
-          title: string
-        }
-        Insert: {
-          created_at?: string
-          created_by: string
-          description?: string | null
-          end_time: string
-          id?: string
-          project_id: string
-          start_time: string
-          title: string
-        }
-        Update: {
-          created_at?: string
-          created_by?: string
-          description?: string | null
-          end_time?: string
-          id?: string
-          project_id?: string
-          start_time?: string
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "events_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "events_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "projects"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      friendships: {
-        Row: {
-          addressee_id: string | null
-          created_at: string | null
-          id: string
-          requester_id: string | null
-          status: string
-          updated_at: string | null
-        }
-        Insert: {
-          addressee_id?: string | null
-          created_at?: string | null
-          id?: string
-          requester_id?: string | null
-          status: string
-          updated_at?: string | null
-        }
-        Update: {
-          addressee_id?: string | null
-          created_at?: string | null
-          id?: string
-          requester_id?: string | null
-          status?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "friendships_addressee_id_fkey"
-            columns: ["addressee_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "friendships_requester_id_fkey"
-            columns: ["requester_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      lists: {
-        Row: {
-          board_id: string
-          created_at: string
-          id: string
-          name: string
-          position: number
-        }
-        Insert: {
-          board_id: string
-          created_at?: string
-          id?: string
-          name: string
-          position?: number
-        }
-        Update: {
-          board_id?: string
-          created_at?: string
-          id?: string
+          is_mentionable?: boolean | null
           name?: string
-          position?: number
+          permission_template_id?: string | null
+          position?: number | null
+          space_id?: string
+          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "lists_board_id_fkey"
-            columns: ["board_id"]
+            foreignKeyName: "member_groups_created_by_fkey"
+            columns: ["created_by"]
             isOneToOne: false
-            referencedRelation: "boards"
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "member_groups_permission_template_id_fkey"
+            columns: ["permission_template_id"]
+            isOneToOne: false
+            referencedRelation: "permission_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "member_groups_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
             referencedColumns: ["id"]
           },
         ]
       }
       messages: {
         Row: {
-          channel_id: string | null
-          content: string
-          conversation_id: string | null
-          created_at: string
+          content: string | null
+          created_at: string | null
+          deleted_at: string | null
+          edited_at: string | null
           id: string
-          reply_to: string | null
-          type: string | null
-          updated_at: string
-          user_id: string
+          message_type: Database["public"]["Enums"]["message_type"] | null
+          metadata: Json | null
+          reply_to_id: string | null
+          sender_id: string
+          sender_username: string
+          space_id: string
+          zone_id: string
         }
         Insert: {
-          channel_id?: string | null
-          content: string
-          conversation_id?: string | null
-          created_at?: string
+          content?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          edited_at?: string | null
           id?: string
-          reply_to?: string | null
-          type?: string | null
-          updated_at?: string
-          user_id: string
+          message_type?: Database["public"]["Enums"]["message_type"] | null
+          metadata?: Json | null
+          reply_to_id?: string | null
+          sender_id: string
+          sender_username: string
+          space_id: string
+          zone_id: string
         }
         Update: {
-          channel_id?: string | null
-          content?: string
-          conversation_id?: string | null
-          created_at?: string
+          content?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          edited_at?: string | null
           id?: string
-          reply_to?: string | null
-          type?: string | null
-          updated_at?: string
-          user_id?: string
+          message_type?: Database["public"]["Enums"]["message_type"] | null
+          metadata?: Json | null
+          reply_to_id?: string | null
+          sender_id?: string
+          sender_username?: string
+          space_id?: string
+          zone_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "messages_channel_id_fkey"
-            columns: ["channel_id"]
-            isOneToOne: false
-            referencedRelation: "channels"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_conversation_id_fkey"
-            columns: ["conversation_id"]
-            isOneToOne: false
-            referencedRelation: "conversations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_reply_to_fkey"
-            columns: ["reply_to"]
+            foreignKeyName: "messages_reply_to_id_fkey"
+            columns: ["reply_to_id"]
             isOneToOne: false
             referencedRelation: "messages"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "messages_user_id_fkey"
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "zones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          data: Json | null
+          id: string
+          message: string | null
+          read_at: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          message?: string | null
+          read_at?: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          message?: string | null
+          read_at?: string | null
+          title?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      permission_templates: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_name: string
+          id: string
+          is_system: boolean | null
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_name: string
+          id?: string
+          is_system?: boolean | null
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_name?: string
+          id?: string
+          is_system?: boolean | null
+          name?: string
+        }
+        Relationships: []
+      }
+      permissions: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          display_name: string
+          id: string
+          name: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description?: string | null
+          display_name: string
+          id?: string
+          name: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          display_name?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      pinned_messages: {
+        Row: {
+          id: string
+          message_id: string
+          pinned_at: string | null
+          pinned_by: string
+          zone_id: string
+        }
+        Insert: {
+          id?: string
+          message_id: string
+          pinned_at?: string | null
+          pinned_by: string
+          zone_id: string
+        }
+        Update: {
+          id?: string
+          message_id?: string
+          pinned_at?: string | null
+          pinned_by?: string
+          zone_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pinned_messages_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pinned_messages_pinned_by_fkey"
+            columns: ["pinned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pinned_messages_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "zones"
             referencedColumns: ["id"]
           },
         ]
@@ -527,68 +724,71 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
-          created_at: string
-          full_name: string | null
+          bio: string | null
+          created_at: string | null
+          display_name: string | null
           id: string
-          onboarding_completed: boolean | null
-          onboarding_data: Json | null
-          updated_at: string
-          username: string | null
+          last_seen_at: string | null
+          settings: Json | null
+          status: Database["public"]["Enums"]["user_status"] | null
+          updated_at: string | null
+          username: string
         }
         Insert: {
           avatar_url?: string | null
-          created_at?: string
-          full_name?: string | null
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string | null
           id: string
-          onboarding_completed?: boolean | null
-          onboarding_data?: Json | null
-          updated_at?: string
-          username?: string | null
+          last_seen_at?: string | null
+          settings?: Json | null
+          status?: Database["public"]["Enums"]["user_status"] | null
+          updated_at?: string | null
+          username: string
         }
         Update: {
           avatar_url?: string | null
-          created_at?: string
-          full_name?: string | null
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string | null
           id?: string
-          onboarding_completed?: boolean | null
-          onboarding_data?: Json | null
-          updated_at?: string
-          username?: string | null
+          last_seen_at?: string | null
+          settings?: Json | null
+          status?: Database["public"]["Enums"]["user_status"] | null
+          updated_at?: string | null
+          username?: string
         }
         Relationships: []
       }
-      project_members: {
+      read_receipts: {
         Row: {
           id: string
-          joined_at: string
-          project_id: string
-          role: string | null
+          message_id: string
+          read_at: string | null
           user_id: string
         }
         Insert: {
           id?: string
-          joined_at?: string
-          project_id: string
-          role?: string | null
+          message_id: string
+          read_at?: string | null
           user_id: string
         }
         Update: {
           id?: string
-          joined_at?: string
-          project_id?: string
-          role?: string | null
+          message_id?: string
+          read_at?: string | null
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "project_members_project_id_fkey"
-            columns: ["project_id"]
+            foreignKeyName: "read_receipts_message_id_fkey"
+            columns: ["message_id"]
             isOneToOne: false
-            referencedRelation: "projects"
+            referencedRelation: "messages"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "project_members_user_id_fkey"
+            foreignKeyName: "read_receipts_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -596,195 +796,181 @@ export type Database = {
           },
         ]
       }
-      project_roles: {
+      space_members: {
         Row: {
-          color: string | null
-          created_at: string | null
           id: string
-          is_default: boolean | null
-          name: string
-          permissions: Json | null
-          position: number | null
-          project_id: string | null
+          joined_at: string | null
+          last_accessed_at: string | null
+          last_accessed_zone_id: string | null
+          permission_template_id: string | null
+          space_id: string
+          user_id: string
         }
         Insert: {
-          color?: string | null
-          created_at?: string | null
           id?: string
-          is_default?: boolean | null
-          name: string
-          permissions?: Json | null
-          position?: number | null
-          project_id?: string | null
+          joined_at?: string | null
+          last_accessed_at?: string | null
+          last_accessed_zone_id?: string | null
+          permission_template_id?: string | null
+          space_id: string
+          user_id: string
         }
         Update: {
-          color?: string | null
-          created_at?: string | null
           id?: string
-          is_default?: boolean | null
-          name?: string
-          permissions?: Json | null
-          position?: number | null
-          project_id?: string | null
+          joined_at?: string | null
+          last_accessed_at?: string | null
+          last_accessed_zone_id?: string | null
+          permission_template_id?: string | null
+          space_id?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "project_roles_project_id_fkey"
-            columns: ["project_id"]
+            foreignKeyName: "space_members_last_accessed_zone_id_fkey"
+            columns: ["last_accessed_zone_id"]
             isOneToOne: false
-            referencedRelation: "projects"
+            referencedRelation: "zones"
             referencedColumns: ["id"]
           },
-        ]
-      }
-      projects: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: string
-          name: string
-          owner_id: string
-          updated_at: string
-          workspace_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          name: string
-          owner_id: string
-          updated_at?: string
-          workspace_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          name?: string
-          owner_id?: string
-          updated_at?: string
-          workspace_id?: string | null
-        }
-        Relationships: [
           {
-            foreignKeyName: "projects_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: "space_members_permission_template_id_fkey"
+            columns: ["permission_template_id"]
+            isOneToOne: false
+            referencedRelation: "permission_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "space_members_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "space_members_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "projects_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
         ]
       }
-      section_permissions: {
+      spaces: {
         Row: {
+          archived_at: string | null
+          avatar_url: string | null
           created_at: string | null
+          created_by: string
+          description: string | null
           id: string
-          permissions: Json | null
-          role_id: string | null
-          section_id: string | null
+          is_public: boolean | null
+          last_activity_at: string | null
+          member_count: number | null
+          name: string | null
+          settings: Json | null
+          updated_at: string | null
         }
         Insert: {
+          archived_at?: string | null
+          avatar_url?: string | null
           created_at?: string | null
+          created_by: string
+          description?: string | null
           id?: string
-          permissions?: Json | null
-          role_id?: string | null
-          section_id?: string | null
+          is_public?: boolean | null
+          last_activity_at?: string | null
+          member_count?: number | null
+          name?: string | null
+          settings?: Json | null
+          updated_at?: string | null
         }
         Update: {
+          archived_at?: string | null
+          avatar_url?: string | null
           created_at?: string | null
+          created_by?: string
+          description?: string | null
           id?: string
-          permissions?: Json | null
-          role_id?: string | null
-          section_id?: string | null
+          is_public?: boolean | null
+          last_activity_at?: string | null
+          member_count?: number | null
+          name?: string | null
+          settings?: Json | null
+          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "section_permissions_role_id_fkey"
-            columns: ["role_id"]
+            foreignKeyName: "spaces_created_by_fkey"
+            columns: ["created_by"]
             isOneToOne: false
-            referencedRelation: "project_roles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "section_permissions_section_id_fkey"
-            columns: ["section_id"]
-            isOneToOne: false
-            referencedRelation: "sections"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
       }
-      sections: {
+      template_permissions: {
         Row: {
-          created_at: string
-          id: string
-          name: string
-          position: number
-          project_id: string
+          permission_id: string
+          template_id: string
         }
         Insert: {
-          created_at?: string
-          id?: string
-          name: string
-          position?: number
-          project_id: string
+          permission_id: string
+          template_id: string
         }
         Update: {
-          created_at?: string
-          id?: string
-          name?: string
-          position?: number
-          project_id?: string
+          permission_id?: string
+          template_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "sections_project_id_fkey"
-            columns: ["project_id"]
+            foreignKeyName: "template_permissions_permission_id_fkey"
+            columns: ["permission_id"]
             isOneToOne: false
-            referencedRelation: "projects"
+            referencedRelation: "permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "template_permissions_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "permission_templates"
             referencedColumns: ["id"]
           },
         ]
       }
-      user_channel_permissions: {
+      user_permissions: {
         Row: {
-          channel_id: string | null
-          created_at: string | null
-          id: string
-          permissions: Json | null
-          user_id: string | null
+          permission_id: string
+          space_id: string
+          user_id: string
         }
         Insert: {
-          channel_id?: string | null
-          created_at?: string | null
-          id?: string
-          permissions?: Json | null
-          user_id?: string | null
+          permission_id: string
+          space_id: string
+          user_id: string
         }
         Update: {
-          channel_id?: string | null
-          created_at?: string | null
-          id?: string
-          permissions?: Json | null
-          user_id?: string | null
+          permission_id?: string
+          space_id?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "user_channel_permissions_channel_id_fkey"
-            columns: ["channel_id"]
+            foreignKeyName: "user_permissions_permission_id_fkey"
+            columns: ["permission_id"]
             isOneToOne: false
-            referencedRelation: "channels"
+            referencedRelation: "permissions"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "user_channel_permissions_user_id_fkey"
+            foreignKeyName: "user_permissions_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_permissions_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -794,27 +980,44 @@ export type Database = {
       }
       user_presence: {
         Row: {
-          custom_status: string | null
-          last_seen: string | null
-          status: string | null
+          current_space_id: string | null
+          current_zone_id: string | null
+          last_seen_at: string | null
+          status: Database["public"]["Enums"]["user_status"] | null
           updated_at: string | null
           user_id: string
         }
         Insert: {
-          custom_status?: string | null
-          last_seen?: string | null
-          status?: string | null
+          current_space_id?: string | null
+          current_zone_id?: string | null
+          last_seen_at?: string | null
+          status?: Database["public"]["Enums"]["user_status"] | null
           updated_at?: string | null
           user_id: string
         }
         Update: {
-          custom_status?: string | null
-          last_seen?: string | null
-          status?: string | null
+          current_space_id?: string | null
+          current_zone_id?: string | null
+          last_seen_at?: string | null
+          status?: Database["public"]["Enums"]["user_status"] | null
           updated_at?: string | null
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "user_presence_current_space_id_fkey"
+            columns: ["current_space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_presence_current_zone_id_fkey"
+            columns: ["current_zone_id"]
+            isOneToOne: false
+            referencedRelation: "zones"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "user_presence_user_id_fkey"
             columns: ["user_id"]
@@ -824,119 +1027,201 @@ export type Database = {
           },
         ]
       }
-      user_roles: {
+      zone_permissions: {
         Row: {
-          assigned_at: string | null
-          assigned_by: string | null
+          created_at: string | null
+          group_id: string | null
           id: string
-          role_id: string | null
+          is_allow: boolean | null
+          permission_id: string
           user_id: string | null
+          zone_id: string
         }
         Insert: {
-          assigned_at?: string | null
-          assigned_by?: string | null
+          created_at?: string | null
+          group_id?: string | null
           id?: string
-          role_id?: string | null
+          is_allow?: boolean | null
+          permission_id: string
           user_id?: string | null
+          zone_id: string
         }
         Update: {
-          assigned_at?: string | null
-          assigned_by?: string | null
+          created_at?: string | null
+          group_id?: string | null
           id?: string
-          role_id?: string | null
+          is_allow?: boolean | null
+          permission_id?: string
           user_id?: string | null
+          zone_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "user_roles_assigned_by_fkey"
-            columns: ["assigned_by"]
+            foreignKeyName: "zone_permissions_group_id_fkey"
+            columns: ["group_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "member_groups"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "user_roles_role_id_fkey"
-            columns: ["role_id"]
+            foreignKeyName: "zone_permissions_permission_id_fkey"
+            columns: ["permission_id"]
             isOneToOne: false
-            referencedRelation: "project_roles"
+            referencedRelation: "permissions"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "user_roles_user_id_fkey"
+            foreignKeyName: "zone_permissions_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
-        ]
-      }
-      workspace_members: {
-        Row: {
-          id: string
-          joined_at: string
-          role: string | null
-          user_id: string
-          workspace_id: string
-        }
-        Insert: {
-          id?: string
-          joined_at?: string
-          role?: string | null
-          user_id: string
-          workspace_id: string
-        }
-        Update: {
-          id?: string
-          joined_at?: string
-          role?: string | null
-          user_id?: string
-          workspace_id?: string
-        }
-        Relationships: [
           {
-            foreignKeyName: "workspace_members_workspace_id_fkey"
-            columns: ["workspace_id"]
+            foreignKeyName: "zone_permissions_zone_id_fkey"
+            columns: ["zone_id"]
             isOneToOne: false
-            referencedRelation: "workspaces"
+            referencedRelation: "zones"
             referencedColumns: ["id"]
           },
         ]
       }
-      workspaces: {
+      zone_templates: {
         Row: {
-          created_at: string
+          created_at: string | null
+          created_by: string
           description: string | null
+          emoji: string | null
           id: string
+          is_public: boolean | null
           name: string
-          owner_id: string
-          slug: string
-          updated_at: string
+          template_data: Json
         }
         Insert: {
-          created_at?: string
+          created_at?: string | null
+          created_by: string
           description?: string | null
+          emoji?: string | null
           id?: string
+          is_public?: boolean | null
           name: string
-          owner_id: string
-          slug: string
-          updated_at?: string
+          template_data: Json
         }
         Update: {
-          created_at?: string
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          emoji?: string | null
+          id?: string
+          is_public?: boolean | null
+          name?: string
+          template_data?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "zone_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      zones: {
+        Row: {
+          archived_at: string | null
+          created_at: string | null
+          created_by: string
+          description: string | null
+          id: string
+          last_message_at: string | null
+          message_count: number | null
+          name: string
+          position: number | null
+          settings: Json | null
+          space_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          archived_at?: string | null
+          created_at?: string | null
+          created_by: string
           description?: string | null
           id?: string
+          last_message_at?: string | null
+          message_count?: number | null
+          name: string
+          position?: number | null
+          settings?: Json | null
+          space_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          archived_at?: string | null
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          id?: string
+          last_message_at?: string | null
+          message_count?: number | null
           name?: string
-          owner_id?: string
-          slug?: string
-          updated_at?: string
+          position?: number | null
+          settings?: Json | null
+          space_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "zones_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "zones_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
+    Views: {
+      permission_cache_stats: {
+        Row: {
+          spaces_with_permissions: number | null
+          total_memberships: number | null
+          total_permissions: number | null
+          users_with_permissions: number | null
+        }
+        Relationships: []
+      }
+      table_sizes: {
+        Row: {
+          schemaname: unknown | null
+          size: string | null
+          size_bytes: number | null
+          tablename: unknown | null
+        }
+        Relationships: []
+      }
+      user_effective_permissions: {
+        Row: {
+          permission_id: string | null
+          permission_name: string | null
+          space_id: string | null
+          user_id: string | null
         }
         Relationships: []
       }
     }
-    Views: {
-      [_ in never]: never
-    }
     Functions: {
+      get_display_name: {
+        Args: { p_user_id: string; p_space_id: string }
+        Returns: string
+      }
       gtrgm_compress: {
         Args: { "": unknown }
         Returns: unknown
@@ -957,6 +1242,10 @@ export type Database = {
         Args: { "": unknown }
         Returns: unknown
       }
+      refresh_user_permissions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       set_limit: {
         Args: { "": number }
         Returns: number
@@ -969,9 +1258,21 @@ export type Database = {
         Args: { "": string }
         Returns: string[]
       }
+      user_has_permission: {
+        Args: { p_user_id: string; p_space_id: string; p_permission: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      message_type: "text" | "audio" | "image" | "video" | "file" | "system"
+      notification_type:
+        | "message"
+        | "mention"
+        | "space_invite"
+        | "zone_invite"
+        | "flow_invite"
+        | "system"
+      user_status: "online" | "away" | "busy" | "offline"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1086,6 +1387,17 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      message_type: ["text", "audio", "image", "video", "file", "system"],
+      notification_type: [
+        "message",
+        "mention",
+        "space_invite",
+        "zone_invite",
+        "flow_invite",
+        "system",
+      ],
+      user_status: ["online", "away", "busy", "offline"],
+    },
   },
 } as const

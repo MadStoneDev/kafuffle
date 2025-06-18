@@ -34,9 +34,9 @@ export default function ContextSidebar({
 }: ContextSidebarProps): JSX.Element {
   return (
     <nav
-      className={`px-4 absolute md:relative ${
+      className={`absolute md:relative ${
         isOpen ? "right-0" : "-right-full md:right-0"
-      } top-0 bottom-0 flex flex-col items-center bg-kafuffle-primary rounded-l-4xl shadow-2xl sm:shadow-none shadow-black text-neutral-50 transition-all duration-500 ease-in-out`}
+      } top-0 bottom-0 flex flex-col items-center bg-kafuffle-primary rounded-l-4xl shadow-2xl sm:shadow-none shadow-black min-w-52 text-neutral-50 transition-all duration-500 ease-in-out`}
     >
       {selectedSpaceId ? (
         <FocusSidebar
