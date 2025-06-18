@@ -5,18 +5,27 @@ import { useEffect, useState } from "react";
 import { IconCube } from "@tabler/icons-react";
 import { createClient } from "@/utils/supabase/client";
 import { getUserSpacesWithCache } from "@/utils/cache/redis";
+import { Space } from "@/types";
 import SpaceItem from "@/components/spaces/space-item";
 
 interface SpacesListProps {
   onSelectSpace: (space: string | null) => void;
 }
 
-interface Space {
+// Raw database response interface
+interface RawSpace {
   id: string;
   name: string | null;
   description: string | null;
   last_activity_at: string;
   member_count: number;
+  created_at: string;
+  updated_at: string;
+  is_public: boolean;
+  created_by: string;
+  archived_at: string | null;
+  avatar_url: string | null;
+  settings: any;
   space_members: Array<{ user_id: string }>;
   zones: Array<{
     id: string;
@@ -26,17 +35,8 @@ interface Space {
   }>;
 }
 
-interface TransformedSpace {
-  id: string;
-  name: string;
-  participants: string[];
-  lastMessage: string;
-  lastActivity: string;
-  unreadCount: number;
-}
-
 export default function SpacesList({ onSelectSpace }: SpacesListProps) {
-  const [spaces, setSpaces] = useState<TransformedSpace[]>([]);
+  const [spaces, setSpaces] = useState<Space[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -57,7 +57,7 @@ export default function SpacesList({ onSelectSpace }: SpacesListProps) {
       }
 
       // Try to get from cache first, fallback to database
-      let rawSpaces: Space[];
+      let rawSpaces: RawSpace[];
       try {
         rawSpaces = await getUserSpacesWithCache(user.id);
       } catch (cacheError) {
@@ -82,22 +82,61 @@ export default function SpacesList({ onSelectSpace }: SpacesListProps) {
           `,
           )
           .eq("space_members.user_id", user.id)
-          .eq("archived_at", null)
-          .order("last_activity_at", { ascending: false });
+          .is("archived_at", null)
+          .order("last_activity_at", { ascending: false, nullsFirst: false });
 
         if (dbError) throw dbError;
         rawSpaces = data || [];
       }
 
-      // Transform spaces to match UI expectations
-      const transformedSpaces: TransformedSpace[] = rawSpaces.map((space) => ({
-        id: space.id,
-        name: space.name || "",
-        participants: space.space_members.map((member) => member.user_id), // We'll need to get usernames later
-        lastMessage: `${space.zones.length} zones • ${space.member_count} members`,
-        lastActivity: space.last_activity_at,
-        unreadCount: 0, // We'll calculate this based on last read timestamps later
-      }));
+      // Transform raw spaces to proper Space type
+      const transformedSpaces: Space[] = rawSpaces.map((space) => {
+        // Get participant usernames (you might want to cache this)
+        const participantIds = space.space_members.map(
+          (member) => member.user_id,
+        );
+
+        // For now, we'll use user IDs as participants
+        // Later you can fetch actual usernames/display names
+        const participants = participantIds;
+
+        // Calculate unread count (placeholder - implement based on your read receipts logic)
+        const unreadCount = 0; // TODO: Calculate based on user's last read timestamps
+
+        // Transform zones to match Zone interface (with minimal required fields)
+        const transformedZones = space.zones.map((zone) => ({
+          id: zone.id,
+          name: zone.name,
+          space_id: space.id, // Add the required space_id
+          position: 0, // Placeholder - you might want to add position to your query
+          last_message_at: zone.last_message_at,
+          message_count: zone.message_count || 0,
+          created_at: space.created_at, // Placeholder
+          updated_at: space.updated_at, // Placeholder
+          created_by: space.created_by, // Placeholder
+        }));
+
+        const transformedSpace: Space = {
+          id: space.id,
+          name: space.name,
+          description: space.description,
+          participants,
+          last_activity_at: space.last_activity_at,
+          lastActivity: space.last_activity_at, // Alias for compatibility
+          created_at: space.created_at,
+          updated_at: space.updated_at,
+          is_public: space.is_public,
+          member_count: space.member_count,
+          created_by: space.created_by,
+          archived_at: space.archived_at,
+          avatar_url: space.avatar_url,
+          settings: space.settings,
+          unreadCount,
+          zones: transformedZones,
+        };
+
+        return transformedSpace;
+      });
 
       setSpaces(transformedSpaces);
     } catch (error: any) {
