@@ -22,6 +22,14 @@ export function generateRandomUsername(): string {
     "smart",
     "nice",
     "fun",
+    "cosmic",
+    "stellar",
+    "magic",
+    "royal",
+    "golden",
+    "silver",
+    "crystal",
+    "diamond",
   ];
 
   const nouns = [
@@ -41,13 +49,30 @@ export function generateRandomUsername(): string {
     "rock",
     "wind",
     "fire",
+    "falcon",
+    "raven",
+    "phoenix",
+    "dragon",
+    "unicorn",
+    "tiger",
+    "whale",
+    "dolphin",
   ];
 
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   const noun = nouns[Math.floor(Math.random() * nouns.length)];
-  const number = Math.floor(Math.random() * 1000);
+  const number = Math.floor(Math.random() * 9999) + 1000; // 4 digit number
 
   return `${adjective}_${noun}_${number}`;
+}
+
+/**
+ * Generate a safe fallback username that doesn't expose user data
+ */
+export function generateSafeFallbackUsername(): string {
+  const randomPart = Math.random().toString(36).substring(2, 8); // Random 6 chars
+  const timestamp = Date.now().toString().slice(-4); // Last 4 digits of timestamp
+  return `user_${randomPart}_${timestamp}`;
 }
 
 /**
@@ -74,9 +99,9 @@ export async function createUserProfile(userId: string, email: string) {
     attempts++;
   }
 
-  // Fallback to user ID if we can't find a unique random name
+  // Safe fallback that doesn't expose user data
   if (attempts >= maxAttempts) {
-    username = `user_${userId.slice(0, 8)}`;
+    username = generateSafeFallbackUsername();
   }
 
   const { data, error } = await supabase

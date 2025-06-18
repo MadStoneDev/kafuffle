@@ -3,7 +3,10 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
-import { createUserProfile } from "@/utils/user/display-name-utils";
+import {
+  createUserProfile,
+  generateSafeFallbackUsername,
+} from "@/utils/user/display-name-utils";
 
 export async function ensureUserProfile() {
   try {
@@ -53,7 +56,11 @@ export async function ensureUserProfile() {
 
       // Try a simpler direct insert as fallback
       console.log("Trying direct insert as fallback...");
-      const fallbackUsername = `user_${user.id.slice(0, 8)}`;
+
+      // Generate a safe random fallback username (no user ID exposure!)
+      const randomPart = Math.random().toString(36).substring(2, 8);
+      const timestamp = Date.now().toString().slice(-4);
+      const fallbackUsername = `user_${randomPart}_${timestamp}`;
 
       const { data: fallbackProfile, error: insertError } = await supabase
         .from("profiles")
