@@ -1,4 +1,4 @@
-// /components/layout/main-window.tsx
+// /components/layout/main-window.tsx (updated)
 import { JSX } from "react";
 import { View } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import SpaceView from "@/components/spaces/space-view";
 import SpacesList from "@/components/spaces/spaces-list";
 import Notifications from "@/components/account/notifications";
+import Profile from "@/components/account/profile";
 
 interface MainWindowProps {
   selectedSpaceId: string | null;
@@ -50,6 +51,7 @@ export default function MainWindow({
   onSelectZone,
 }: MainWindowProps): JSX.Element {
   const renderCurrentView = () => {
+    // Handle account-related views
     if (currentView === "notifications") {
       return (
         <motion.div
@@ -66,6 +68,23 @@ export default function MainWindow({
       );
     }
 
+    if (currentView === "profile") {
+      return (
+        <motion.div
+          key="profile"
+          initial="initial"
+          animate="in"
+          exit="out"
+          variants={pageVariants}
+          transition={pageTransition}
+          className={`h-full`}
+        >
+          <Profile onViewChange={onViewChange} />
+        </motion.div>
+      );
+    }
+
+    // Handle space-related views
     if (!selectedSpaceId) {
       return (
         <motion.div
@@ -81,7 +100,6 @@ export default function MainWindow({
         </motion.div>
       );
     } else {
-      // Remove the local reassignment - let useEffect handle the default
       return (
         <motion.div
           key={`space-${selectedSpaceId}-${selectedZoneId || "default"}`}
@@ -95,7 +113,7 @@ export default function MainWindow({
           <SpaceView
             spaceId={selectedSpaceId}
             onSelectSpace={onSelectSpace}
-            selectedZoneId={selectedZoneId || "1"} // Provide fallback here
+            selectedZoneId={selectedZoneId || "1"}
             onSelectZone={onSelectZone}
           />
         </motion.div>

@@ -1242,6 +1242,10 @@ export type Database = {
         Args: { "": unknown }
         Returns: unknown
       }
+      increment_message_count: {
+        Args: { zone_id: string }
+        Returns: number
+      }
       refresh_user_permissions: {
         Args: Record<PropertyKey, never>
         Returns: undefined

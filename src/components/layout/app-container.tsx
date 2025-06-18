@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { initializeUserData } from "@/app/actions/message-actions";
+import { ensureUserProfile } from "@/app/actions/profile-actions";
 
 import MainWindow from "@/components/layout/main-window";
 import NavigateSidebar from "@/components/layout/navigate-sidebar";
@@ -72,9 +73,16 @@ export default function AppContainer() {
 
       try {
         setIsInitializing(true);
-        const supabase = createClient();
+
+        // First, ensure user has a profile (creates with random username if needed)
+        const profileResult = await ensureUserProfile();
+        if (!profileResult.success) {
+          console.error("Failed to ensure user profile:", profileResult.error);
+          return;
+        }
 
         // Check if user has any spaces
+        const supabase = createClient();
         const {
           data: { user },
         } = await supabase.auth.getUser();
