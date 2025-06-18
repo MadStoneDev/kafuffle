@@ -250,7 +250,7 @@ export default function Profile({ onViewChange }: ProfileProps) {
 
   return (
     <div className="flex-grow p-6 bg-neutral-50 dark:bg-neutral-800/90 rounded-4xl h-full">
-      <div className="max-w-2xl mx-auto">
+      <div className="mx-auto">
         {/* Header */}
         <header className="mb-6 flex items-center gap-2 text-neutral-900 dark:text-neutral-50">
           <button

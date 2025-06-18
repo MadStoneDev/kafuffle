@@ -196,6 +196,13 @@ export async function uploadAvatar(file: File) {
       return { success: false, error: "Not authenticated" };
     }
 
+    console.log("Uploading avatar for user:", user.id);
+    console.log("File details:", {
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    });
+
     // Validate file
     if (!file.type.startsWith("image/")) {
       return { success: false, error: "File must be an image" };
@@ -207,47 +214,107 @@ export async function uploadAvatar(file: File) {
     }
 
     // Generate unique filename
-    const fileExt = file.name.split(".").pop();
+    const fileExt = file.name.split(".").pop()?.toLowerCase();
     const fileName = `${user.id}-${Date.now()}.${fileExt}`;
     const filePath = `avatars/${fileName}`;
 
+    console.log("Uploading to path:", filePath);
+
+    // Check if bucket exists first
+    const { data: buckets, error: bucketError } =
+      await supabase.storage.listBuckets();
+
+    if (bucketError) {
+      console.error("Error checking buckets:", bucketError);
+      return { success: false, error: "Storage service unavailable" };
+    }
+
+    const userContentBucket = buckets?.find((b) => b.id === "user-content");
+    if (!userContentBucket) {
+      console.error("user-content bucket not found");
+      return {
+        success: false,
+        error: "Storage bucket not configured. Please contact support.",
+      };
+    }
+
+    console.log("Bucket exists:", userContentBucket);
+
     // Upload to Supabase Storage
-    const { error: uploadError } = await supabase.storage
+    const { data: uploadData, error: uploadError } = await supabase.storage
       .from("user-content")
       .upload(filePath, file, {
         cacheControl: "3600",
-        upsert: false,
+        upsert: true, // Allow overwriting existing files
       });
 
     if (uploadError) {
-      console.error("Avatar upload error:", uploadError);
-      return { success: false, error: "Failed to upload avatar" };
+      console.error("Upload error details:", {
+        message: uploadError.message,
+        error: uploadError,
+      });
+
+      // Provide more specific error messages
+      if (uploadError.message?.includes("duplicate")) {
+        return {
+          success: false,
+          error: "File already exists. Please try again.",
+        };
+      }
+      if (uploadError.message?.includes("policy")) {
+        return {
+          success: false,
+          error:
+            "Permission denied. Storage policies may need to be configured.",
+        };
+      }
+      if (uploadError.message?.includes("size")) {
+        return {
+          success: false,
+          error: "File too large. Please use a smaller image.",
+        };
+      }
+
+      return { success: false, error: `Upload failed: ${uploadError.message}` };
     }
+
+    console.log("Upload successful:", uploadData);
 
     // Get public URL
     const {
       data: { publicUrl },
     } = supabase.storage.from("user-content").getPublicUrl(filePath);
 
+    console.log("Public URL:", publicUrl);
+
+    // Verify the URL is accessible
+    if (!publicUrl || !publicUrl.includes("user-content")) {
+      return { success: false, error: "Failed to generate public URL" };
+    }
+
     // Update profile with new avatar URL
-    const { error: updateError } = await supabase.from("profiles").upsert({
-      id: user.id,
-      avatar_url: publicUrl,
-      updated_at: new Date().toISOString(),
-    });
+    const { error: updateError } = await supabase
+      .from("profiles")
+      .update({
+        avatar_url: publicUrl,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", user.id);
 
     if (updateError) {
-      console.error("Profile avatar update error:", updateError);
+      console.error("Profile update error:", updateError);
       return {
         success: false,
         error: "Failed to update profile with new avatar",
       };
     }
 
+    console.log("Profile updated successfully");
+
     revalidatePath("/");
     return { success: true, avatarUrl: publicUrl };
   } catch (error: any) {
-    console.error("Avatar upload error:", error);
+    console.error("Unexpected avatar upload error:", error);
     return {
       success: false,
       error: error.message || "Failed to upload avatar",
