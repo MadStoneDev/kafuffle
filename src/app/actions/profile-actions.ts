@@ -11,30 +11,77 @@ export async function ensureUserProfile() {
 
     const {
       data: { user },
+      error: userError,
     } = await supabase.auth.getUser();
+    if (userError) {
+      console.error("Auth error:", userError);
+      return { success: false, error: "Authentication failed" };
+    }
+
     if (!user) {
       return { success: false, error: "Not authenticated" };
     }
 
+    console.log("Checking profile for user:", user.id);
+
     // Check if profile exists
-    const { data: existingProfile } = await supabase
+    const { data: existingProfile, error: fetchError } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", user.id)
-      .single();
+      .maybeSingle(); // Use maybeSingle() instead of single() to avoid errors when no record exists
+
+    if (fetchError) {
+      console.error("Error fetching profile:", fetchError);
+      // Continue to try creating profile even if fetch failed
+    }
 
     if (existingProfile) {
+      console.log("Profile exists:", existingProfile);
       return { success: true, profile: existingProfile };
     }
 
+    console.log("Profile doesn't exist, creating new profile...");
+
     // Create profile if it doesn't exist
-    const newProfile = await createUserProfile(user.id, user.email || "");
-    return { success: true, profile: newProfile };
+    try {
+      const newProfile = await createUserProfile(user.id, user.email || "");
+      console.log("Profile created successfully:", newProfile);
+      return { success: true, profile: newProfile };
+    } catch (createError) {
+      console.error("Failed to create profile:", createError);
+
+      // Try a simpler direct insert as fallback
+      console.log("Trying direct insert as fallback...");
+      const fallbackUsername = `user_${user.id.slice(0, 8)}`;
+
+      const { data: fallbackProfile, error: insertError } = await supabase
+        .from("profiles")
+        .insert({
+          id: user.id,
+          username: fallbackUsername,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error("Fallback insert failed:", insertError);
+        return {
+          success: false,
+          error: `Profile creation failed: ${insertError.message}`,
+        };
+      }
+
+      console.log("Fallback profile created:", fallbackProfile);
+      return { success: true, profile: fallbackProfile };
+    }
   } catch (error: any) {
-    console.error("Failed to ensure user profile:", error);
+    console.error("Unexpected error in ensureUserProfile:", error);
     return {
       success: false,
-      error: error.message || "Failed to create profile",
+      error: error.message || "Failed to ensure profile",
     };
   }
 }
