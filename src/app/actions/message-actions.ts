@@ -181,6 +181,8 @@ export async function sendMessage(
       };
     }
 
+    const now = new Date().toISOString();
+
     // Create message
     const { data: message, error: messageError } = await supabase
       .from("messages")
@@ -194,6 +196,9 @@ export async function sendMessage(
         space_id: spaceId,
         zone_id: zoneId,
         message_type: messageType,
+        created_at: now,
+        updated_at: now,
+        deleted_at: null,
       })
       .select(
         `
@@ -209,10 +214,8 @@ export async function sendMessage(
     const { error: updateError } = await supabase
       .from("zones")
       .update({
-        last_message_at: new Date().toISOString(),
-        message_count: supabase.rpc("increment_message_count", {
-          zone_id: zoneId,
-        }),
+        last_message_at: now,
+        updated_at: now,
       })
       .eq("id", zoneId);
 
@@ -223,7 +226,10 @@ export async function sendMessage(
     // Update space's last_activity_at
     const { error: spaceUpdateError } = await supabase
       .from("spaces")
-      .update({ last_activity_at: new Date().toISOString() })
+      .update({
+        last_activity_at: now,
+        updated_at: now,
+      })
       .eq("id", spaceId);
 
     if (spaceUpdateError) {
@@ -405,7 +411,6 @@ export async function deleteMessage(messageId: string) {
   }
 }
 
-// Initialize user data for first-time users
 export async function initializeUserData() {
   const supabase = await createClient();
 
@@ -425,10 +430,12 @@ export async function initializeUserData() {
       .limit(1);
 
     if (existingSpaces && existingSpaces.length > 0) {
-      return { success: true, message: "User already has data", error: null };
+      return { success: true, message: "User already has data" };
     }
 
-    // Create initial space
+    const now = new Date().toISOString();
+
+    // Create initial space with proper timestamps
     const spaceResult = await createSpace(
       "Getting Started",
       "Your first space to explore Kafuffle's features",
@@ -438,7 +445,16 @@ export async function initializeUserData() {
       return spaceResult;
     }
 
-    // Send additional welcome messages
+    // Update the space with proper last_activity_at
+    await supabase
+      .from("spaces")
+      .update({
+        last_activity_at: now,
+        updated_at: now,
+      })
+      .eq("id", spaceResult.space.id);
+
+    // Send additional welcome messages if zones exist
     if (spaceResult.zones && spaceResult.zones.length > 0) {
       const generalZone = spaceResult.zones[0];
 
@@ -464,11 +480,7 @@ export async function initializeUserData() {
       );
     }
 
-    return {
-      success: true,
-      message: "Initial data created successfully",
-      error: null,
-    };
+    return { success: true, message: "Initial data created successfully" };
   } catch (error: any) {
     console.error("Failed to initialize user data:", error);
     return { success: false, error: error.message };

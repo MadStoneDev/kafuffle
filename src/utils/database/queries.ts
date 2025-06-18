@@ -1,8 +1,8 @@
 ﻿// /utils/database/queries.ts
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/server";
 
 export async function getUserSpaces(userId: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: spaces, error } = await supabase
     .from("spaces")
@@ -19,21 +19,21 @@ export async function getUserSpaces(userId: string) {
     `,
     )
     .eq("space_members.user_id", userId)
-    .eq("archived_at", null)
-    .order("last_activity_at", { ascending: false });
+    .is("archived_at", null)
+    .order("last_activity_at", { ascending: false, nullsFirst: false });
 
   if (error) throw error;
   return spaces || [];
 }
 
 export async function getSpaceZones(spaceId: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: zones, error } = await supabase
     .from("zones")
     .select("*")
     .eq("space_id", spaceId)
-    .eq("archived_at", null)
+    .is("archived_at", null)
     .order("position", { ascending: true });
 
   if (error) throw error;
@@ -45,7 +45,7 @@ export async function getZoneMessages(
   limit = 50,
   before?: string,
 ) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   let query = supabase
     .from("messages")
@@ -57,7 +57,7 @@ export async function getZoneMessages(
     `,
     )
     .eq("zone_id", zoneId)
-    .eq("deleted_at", null)
+    .is("deleted_at", null)
     .order("created_at", { ascending: false })
     .limit(limit);
 
