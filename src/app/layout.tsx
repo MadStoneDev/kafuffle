@@ -12,8 +12,9 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "Kafuffle | ",
-  description: "",
+  title: "Kafuffle | Where friends connect, organise and plan",
+  description:
+    "Kafuffle is a private, secure, and fun social network for friends and family.",
 };
 
 export default function RootLayout({
@@ -22,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`bg-neutral-100 dark:bg-black/95 text-neutral-900 dark:text-neutral-200 ${lexend.className} antialiased`}
       >

@@ -1,30 +1,34 @@
-﻿// /components/layout/landing-page.tsx
-"use client";
-
+﻿import React from "react";
 import {
   IconArrowRight,
   IconCheck,
   IconMessage,
-  IconTable,
   IconCalendar,
+  IconUsers,
+  IconShield,
+  IconBolt,
+  IconHeart,
 } from "@tabler/icons-react";
-import KafuffleLogo from "@/components/layout/kafuffle-full-logo";
+import { View } from "@/types";
+import Link from "next/link";
 
-export default function LandingPage() {
-  const heroBg = "hero-bg.png";
-
+export default function LandingPage({
+  onViewChange,
+}: {
+  onViewChange: (view: View) => void;
+}) {
   return (
     <div
-      className={`flex-grow bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-800 dark:to-neutral-900 rounded-4xl h-full overflow-y-auto`}
+      className={`flex-grow bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 rounded-4xl h-full overflow-y-auto`}
     >
-      <div className="mx-auto p-8">
+      <div className="mx-auto max-w-7xl px-6 py-8">
         {/* Hero Section */}
         <section
           className={`relative mb-12 grid place-content-center min-h-[400px] rounded-2xl text-center border border-neutral-700 dark:border-neutral-600 overflow-hidden`}
           style={{
-            backgroundImage: `url(${heroBg})`,
+            backgroundImage: `url(hero-bg.png)`,
             backgroundSize: "cover",
-            backgroundPosition: "center 55%",
+            backgroundPosition: "center 70%",
           }}
         >
           {/* Background Overlay - stays behind content */}
@@ -36,11 +40,11 @@ export default function LandingPage() {
           <div className="relative z-10">
             <div className="mb-8">
               <h1
-                className={`text-3xl md:text-4xl font-bold text-neutral-50 mb-8 flex flex-col items-center gap-4 uppercase`}
+                className={`flex flex-col items-center text-3xl md:text-5xl font-black text-neutral-50 uppercase`}
               >
                 Welcome to
                 <div className="flex items-center justify-center">
-                  <KafuffleLogo props={{ className: "h-10 md:h-12 w-auto" }} />
+                  <span className="text-4xl md:text-6xl">Kafuffle</span>
                 </div>
               </h1>
             </div>
@@ -60,163 +64,187 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Features Grid */}
+        {/* Features Section - Discord-inspired */}
         <section className="mb-20">
-          <h2 className="text-3xl font-bold text-center text-neutral-900 dark:text-white mb-12">
-            Three ways to stay close to the ones you love
-          </h2>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
+              Built for meaningful connections
+            </h2>
+            <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
+              Everything you need to stay close to the people who matter most,
+              in one beautiful platform
+            </p>
+          </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-8">
             {/* Real-time Messaging */}
-            <div className="bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/10 dark:to-rose-900/10 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-pink-200 dark:border-pink-800/30 hover:scale-105">
-              <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-rose-500 rounded-xl flex items-center justify-center mb-6 shadow-lg">
-                <IconMessage size={24} className="text-white" />
+            <div className="group bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700 hover:border-rose-200 dark:hover:border-rose-700">
+              <div className="w-14 h-14 bg-gradient-to-br from-rose-400 to-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <IconMessage size={28} className="text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-4">
-                Heart-to-Heart Messages
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                Real-time Chat
               </h3>
-              <p className="text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                Share your deepest thoughts, sweetest memories, and daily
-                moments with the people who matter most. Every conversation
-                feels like a warm embrace.
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
+                Instant messaging that feels personal. Share your thoughts,
+                memories, and daily moments with lightning-fast delivery.
               </p>
+              <div className="mt-6 flex items-center text-rose-500 font-semibold">
+                <span>Always connected</span>
+                <IconArrowRight
+                  size={16}
+                  className="ml-2 group-hover:translate-x-1 transition-transform"
+                />
+              </div>
             </div>
 
-            {/* Project Flows */}
-            <div className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/10 dark:to-violet-900/10 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-200 dark:border-purple-800/30 hover:scale-105">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-violet-500 rounded-xl flex items-center justify-center mb-6 shadow-lg">
-                <IconTable size={24} className="text-white" />
+            {/* Project Management */}
+            <div className="group bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700 hover:border-purple-200 dark:hover:border-purple-700">
+              <div className="w-14 h-14 bg-gradient-to-br from-purple-400 to-violet-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <IconUsers size={28} className="text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-4">
-                Dream Boards
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                Shared Spaces
               </h3>
-              <p className="text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                Plan adventures together, track relationship goals, or organize
-                your shared bucket list. Turn dreams into beautiful, achievable
-                moments.
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
+                Plan adventures, track goals, and organize your dreams together.
+                Collaborative tools designed for relationships.
               </p>
+              <div className="mt-6 flex items-center text-purple-500 font-semibold">
+                <span>Dream together</span>
+                <IconArrowRight
+                  size={16}
+                  className="ml-2 group-hover:translate-x-1 transition-transform"
+                />
+              </div>
             </div>
 
-            {/* Calendar Integration */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-200 dark:border-blue-800/30 hover:scale-105">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center mb-6 shadow-lg">
-                <IconCalendar size={24} className="text-white" />
+            {/* Calendar */}
+            <div className="group bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700 hover:border-blue-200 dark:hover:border-blue-700">
+              <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <IconCalendar size={28} className="text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-4">
-                Shared Moments
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                Smart Calendar
               </h3>
-              <p className="text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                Never miss another anniversary, plan perfect date nights, and
-                create countdowns to special moments you'll treasure forever.
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
+                Never miss special moments. Plan dates, track anniversaries, and
+                create countdowns to your next adventure.
               </p>
+              <div className="mt-6 flex items-center text-blue-500 font-semibold">
+                <span>Perfect timing</span>
+                <IconArrowRight
+                  size={16}
+                  className="ml-2 group-hover:translate-x-1 transition-transform"
+                />
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Why Choose Kafuffle */}
+        {/* Why Choose Section - More professional */}
         <section className="mb-20">
-          <div className="bg-gradient-to-r from-pink-50 via-purple-50 to-blue-50 dark:from-pink-900/10 dark:via-purple-900/10 dark:to-blue-900/10 rounded-3xl p-12 border border-pink-200 dark:border-pink-800/30">
-            <h2 className="text-3xl font-bold text-center text-neutral-900 dark:text-white mb-12">
-              Why couples and close friends choose Kafuffle
-            </h2>
+          <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-3xl p-12 border border-slate-200 dark:border-slate-700">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
+                Why choose Kafuffle?
+              </h2>
+              <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
+                Built with privacy, security, and meaningful connections at its
+                core
+              </p>
+            </div>
 
-            <div className="grid md:grid-cols-2 gap-12">
-              <div>
-                <div className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg">
-                      <IconCheck size={16} className="text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-neutral-900 dark:text-white mb-2">
-                        Your Private Sanctuary
-                      </h4>
-                      <p className="text-neutral-600 dark:text-neutral-300">
-                        Your conversations stay completely private. Only you can
-                        edit your messages, ensuring your intimate moments
-                        remain sacred.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-gradient-to-br from-purple-400 to-violet-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg">
-                      <IconCheck size={16} className="text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-neutral-900 dark:text-white mb-2">
-                        Instant Connection
-                      </h4>
-                      <p className="text-neutral-600 dark:text-neutral-300">
-                        Messages arrive the moment you send them. Share your
-                        feelings in real-time and feel closer than ever, no
-                        matter the distance.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg">
-                      <IconCheck size={16} className="text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-neutral-900 dark:text-white mb-2">
-                        Beautifully Yours
-                      </h4>
-                      <p className="text-neutral-600 dark:text-neutral-300">
-                        Every interaction feels warm and inviting. Designed to
-                        make your most precious relationships feel special and
-                        celebrated.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-6">
+            <div className="grid lg:grid-cols-2 gap-12">
+              <div className="space-y-8">
                 <div className="flex items-start gap-4">
-                  <div className="w-6 h-6 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg">
-                    <IconCheck size={16} className="text-white" />
+                  <div className="w-8 h-8 bg-gradient-to-br from-rose-400 to-pink-500 rounded-xl flex items-center justify-center flex-shrink-0 mt-1">
+                    <IconShield size={18} className="text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-neutral-900 dark:text-white mb-2">
-                      Everything Together
+                    <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
+                      Privacy First
                     </h4>
-                    <p className="text-neutral-600 dark:text-neutral-300">
-                      Chat, plan, and dream in one beautiful space. No more
-                      switching between apps to stay connected with your
-                      favorite people.
+                    <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                      End-to-end encryption ensures your conversations stay
+                      between you and your loved ones. Your data, your control.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-6 h-6 bg-gradient-to-br from-violet-400 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg">
-                    <IconCheck size={16} className="text-white" />
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-violet-500 rounded-xl flex items-center justify-center flex-shrink-0 mt-1">
+                    <IconBolt size={18} className="text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-neutral-900 dark:text-white mb-2">
+                    <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
+                      Lightning Fast
+                    </h4>
+                    <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                      Real-time messaging with instant delivery. Feel closer
+                      than ever, no matter the distance between you.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center flex-shrink-0 mt-1">
+                    <IconHeart size={18} className="text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
                       Made for Love
                     </h4>
-                    <p className="text-neutral-600 dark:text-neutral-300">
-                      Built specifically for meaningful relationships. Every
-                      feature designed to bring you closer to the people you
-                      care about most.
+                    <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                      Every feature designed to strengthen relationships and
+                      create lasting memories with your favorite people.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-8">
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-green-500 rounded-xl flex items-center justify-center flex-shrink-0 mt-1">
+                    <IconCheck size={18} className="text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
+                      All-in-One Platform
+                    </h4>
+                    <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                      Chat, plan, and organize in one beautiful space. No more
+                      juggling multiple apps to stay connected.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-6 h-6 bg-gradient-to-br from-indigo-400 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg">
-                    <IconCheck size={16} className="text-white" />
+                  <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0 mt-1">
+                    <IconUsers size={18} className="text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-neutral-900 dark:text-white mb-2">
-                      Free to Love
+                    <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
+                      Seamless Collaboration
                     </h4>
-                    <p className="text-neutral-600 dark:text-neutral-300">
-                      Start connecting immediately with our generous free plan.
-                      Love shouldn't come with limits or price tags.
+                    <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                      Work together effortlessly on shared goals, plans, and
+                      dreams. Built for teams of two or more.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-gradient-to-br from-rose-400 to-pink-500 rounded-xl flex items-center justify-center flex-shrink-0 mt-1">
+                    <IconHeart size={18} className="text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
+                      Free to Start
+                    </h4>
+                    <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                      Begin your journey with our generous free plan. Meaningful
+                      connections shouldn't have barriers.
                     </p>
                   </div>
                 </div>
@@ -225,72 +253,83 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Stats Section */}
+        {/* Stats Section - More professional */}
         <section className="mb-20">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-12">
-              Join thousands already connecting in their own special spaces
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
+              Trusted by thousands
             </h2>
+            <p className="text-xl text-slate-600 dark:text-slate-400">
+              Join a growing community of people building deeper connections
+            </p>
+          </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <div className="text-center">
-                <div className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent mb-2">
-                  10K+
-                </div>
-                <div className="text-neutral-600 dark:text-neutral-400">
-                  Happy Hearts
-                </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
+              <div className="text-4xl font-bold bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent mb-2">
+                25K+
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-violet-500 bg-clip-text text-transparent mb-2">
-                  500+
-                </div>
-                <div className="text-neutral-600 dark:text-neutral-400">
-                  Private Spaces
-                </div>
+              <div className="text-slate-600 dark:text-slate-400 font-medium">
+                Active Users
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent mb-2">
-                  1M+
-                </div>
-                <div className="text-neutral-600 dark:text-neutral-400">
-                  Love Messages
-                </div>
+            </div>
+            <div className="text-center bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
+              <div className="text-4xl font-bold bg-gradient-to-r from-purple-500 to-violet-500 bg-clip-text text-transparent mb-2">
+                1.2K+
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent mb-2">
-                  ∞
-                </div>
-                <div className="text-neutral-600 dark:text-neutral-400">
-                  Precious Moments
-                </div>
+              <div className="text-slate-600 dark:text-slate-400 font-medium">
+                Private Spaces
+              </div>
+            </div>
+            <div className="text-center bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
+              <div className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent mb-2">
+                5M+
+              </div>
+              <div className="text-slate-600 dark:text-slate-400 font-medium">
+                Messages Sent
+              </div>
+            </div>
+            <div className="text-center bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
+              <div className="text-4xl font-bold bg-gradient-to-r from-emerald-500 to-green-500 bg-clip-text text-transparent mb-2">
+                99.9%
+              </div>
+              <div className="text-slate-600 dark:text-slate-400 font-medium">
+                Uptime
               </div>
             </div>
           </div>
         </section>
 
-        {/* Final CTA */}
+        {/* Final CTA - Modern and clean */}
         <section className="text-center">
-          <div className="bg-neutral-50 dark:bg-neutral-400 rounded-3xl p-12 text-white relative overflow-hidden shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-r from-pink-400/20 via-purple-500/20 to-blue-500/20 rounded-3xl"></div>
+          <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-3xl border-2 border-kafuffle-primary p-12 dark:text-white relative overflow-hidden shadow-2xl">
+            <div className="absolute inset-0 rounded-3xl"></div>
             <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Ready to create your perfect private space?
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                Ready to connect?
               </h2>
-              <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+              <p className="text-xl mb-8 opacity-90 max-w-3xl mx-auto leading-relaxed">
                 Join Kafuffle today and start building deeper, more meaningful
-                connections with the people who matter most to you.
+                connections with the people who matter most.
               </p>
-              <button
-                onClick={() => (window.location.href = "/auth")}
-                className="group px-10 py-5 bg-kafuffle-primary rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl flex items-center gap-3 mx-auto"
-              >
-                Start Connecting
-                <IconArrowRight
-                  size={24}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link
+                  href={`/auth`}
+                  className={`group cursor-pointer px-10 py-5 bg-slate-900 dark:bg-white hover:bg-kafuffle-primary text-slate-50 dark:text-slate-900 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl flex items-center gap-3`}
+                >
+                  Start Free
+                  <IconArrowRight
+                    size={24}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </Link>
+                <button
+                  onClick={() => onViewChange("about")}
+                  className={`cursor-pointer px-10 py-5 border-2 border-slate-900 dark:border-white/30 hover:border-kafuffle-primary hover:bg-kafuffle-primary hover:scale-105 text-slate-900 dark:text-white rounded-xl font-bold text-lg transition-all duration-300`}
+                >
+                  Learn More
+                </button>
+              </div>
             </div>
           </div>
         </section>

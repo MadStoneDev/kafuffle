@@ -9,10 +9,12 @@ import {
   IconSettings,
   IconUser,
   IconUserFilled,
+  IconUserPlus,
 } from "@tabler/icons-react";
 import { View } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 import DarkModeToggle from "@/components/layout/dark-mode-toggle";
+import Link from "next/link";
 
 interface NavigateSidebarProps {
   isOpen: boolean;
@@ -48,11 +50,12 @@ export default function NavigateSidebar({
         className={`fixed top-0 right-0 bottom-0 left-0 bg-black ${isOpen ? "pointer-events-auto sm:pointer-events-none opacity-30 sm:opacity-0" : "pointer-events-none opacity-0"} transition-all duration-500 ease-in-out z-10`}
       />
       <section className={`flex-grow flex flex-col gap-2 z-20`}>
-        <div
+        <Link
+          href={`/`}
           className={`grid place-content-center w-10 h-10 transition-all duration-500 ease-in-out`}
         >
           <img src={`kafuffle-symbol.svg`} />
-        </div>
+        </Link>
 
         <div className={`w-full h-px bg-neutral-50/20`} />
 
@@ -77,20 +80,20 @@ export default function NavigateSidebar({
         )}
 
         {/* Help - always available */}
-        <div
+        <button
           onClick={() => onViewChange("help")}
           className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "help" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
         >
           <IconHelpCircleFilled />
-        </div>
+        </button>
 
         {/* About - always available */}
-        <div
+        <button
           onClick={() => onViewChange("about")}
           className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full ${currentView === "about" ? "text-kafuffle-primary hover:text-neutral-50" : "text-neutral-50"} transition-all duration-500 ease-in-out`}
         >
           <IconInfoCircleFilled />
-        </div>
+        </button>
       </section>
 
       <section className={`flex flex-col gap-2`}>
@@ -137,7 +140,7 @@ export default function NavigateSidebar({
             className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full text-neutral-50 transition-all duration-500 ease-in-out`}
             title="Sign In"
           >
-            <IconUser />
+            <IconUserPlus />
           </div>
         )}
       </section>

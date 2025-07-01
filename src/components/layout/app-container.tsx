@@ -167,7 +167,7 @@ export default function AppContainer() {
           onSelectZone={selectZone}
         />
       ) : (
-        <HomePage />
+        <HomePage onViewChange={setCurrentView} />
       )}
 
       {/* Context (Discover/Focus) Sidebar - only show when authenticated and viewing spaces */}

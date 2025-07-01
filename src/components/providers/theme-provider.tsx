@@ -7,5 +7,14 @@ export default function ThemeProvider({
 }: {
   children: React.ReactNode;
 }) {
-  return <NextThemeProvider attribute={`class`}>{children}</NextThemeProvider>;
+  return (
+    <NextThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem={true}
+      disableTransitionOnChange={false}
+    >
+      {children}
+    </NextThemeProvider>
+  );
 }
