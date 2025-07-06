@@ -803,6 +803,7 @@ export type Database = {
           last_accessed_at: string | null
           last_accessed_zone_id: string | null
           permission_template_id: string | null
+          role: string | null
           space_id: string
           user_id: string
         }
@@ -812,6 +813,7 @@ export type Database = {
           last_accessed_at?: string | null
           last_accessed_zone_id?: string | null
           permission_template_id?: string | null
+          role?: string | null
           space_id: string
           user_id: string
         }
@@ -821,6 +823,7 @@ export type Database = {
           last_accessed_at?: string | null
           last_accessed_zone_id?: string | null
           permission_template_id?: string | null
+          role?: string | null
           space_id?: string
           user_id?: string
         }
@@ -1218,6 +1221,10 @@ export type Database = {
       }
     }
     Functions: {
+      get_auth_uid: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       get_display_name: {
         Args: { p_user_id: string; p_space_id: string }
         Returns: string
@@ -1263,7 +1270,21 @@ export type Database = {
         Returns: string[]
       }
       user_has_permission: {
-        Args: { p_user_id: string; p_space_id: string; p_permission: string }
+        Args: {
+          p_user_id: string
+          p_space_id: string
+          p_permission: string
+          p_zone_id?: string
+        }
+        Returns: boolean
+      }
+      user_has_permission_with_zone: {
+        Args: {
+          p_user_id: string
+          p_space_id: string
+          p_permission: string
+          p_zone_id?: string
+        }
         Returns: boolean
       }
     }

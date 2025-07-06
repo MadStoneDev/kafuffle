@@ -2,14 +2,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { IconMessage, IconTable } from "@tabler/icons-react";
+import { IconMessage, IconTable, IconCalendar } from "@tabler/icons-react";
 import { createClient } from "@/utils/supabase/client";
-import { getSpaceZonesWithCache } from "@/utils/cache/redis";
 
 interface ZonesListProps {
   selectedSpaceId: string | null;
   selectedZoneId: string | null;
   onSelectZone: (selectedZoneId: string | null) => void;
+  onCreateZone: () => void;
 }
 
 interface Zone {
@@ -26,9 +26,11 @@ export default function ZonesList({
   selectedSpaceId,
   selectedZoneId,
   onSelectZone,
+  onCreateZone,
 }: ZonesListProps) {
   const [zones, setZones] = useState<Zone[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (selectedSpaceId) {
@@ -40,38 +42,61 @@ export default function ZonesList({
 
   const loadZones = async (spaceId: string) => {
     setLoading(true);
+    setError(null);
+
     try {
-      // Try cache first, fallback to database
-      let zonesData: Zone[];
-      try {
-        zonesData = await getSpaceZonesWithCache(spaceId);
-      } catch (cacheError) {
-        console.warn(
-          "Cache failed, falling back to direct DB query:",
-          cacheError,
-        );
+      const supabase = createClient();
 
-        // Direct database query as fallback
-        const supabase = createClient();
-        const { data, error } = await supabase
-          .from("zones")
-          .select("*")
-          .eq("space_id", spaceId)
-          .eq("archived_at", null)
-          .order("position", { ascending: true });
+      // Direct database query without cache dependency
+      const { data, error } = await supabase
+        .from("zones")
+        .select("*")
+        .eq("space_id", spaceId)
+        .is("archived_at", null) // Use is() for null check
+        .order("position", { ascending: true });
 
-        if (error) throw error;
-        zonesData = data || [];
+      if (error) {
+        console.error("Zone query error:", error);
+        throw error;
       }
 
+      // Transform data and add zone_type based on name or settings
+      const zonesData: Zone[] = (data || []).map((zone) => {
+        // Determine zone type based on name or settings
+        let zoneType: "chat" | "flow" | "calendar" = "chat";
+        if (
+          zone.name.toLowerCase().includes("task") ||
+          zone.name.toLowerCase().includes("flow")
+        ) {
+          zoneType = "flow";
+        } else if (
+          zone.name.toLowerCase().includes("calendar") ||
+          zone.name.toLowerCase().includes("event")
+        ) {
+          zoneType = "calendar";
+        }
+
+        return {
+          id: zone.id,
+          name: zone.name,
+          description: zone.description,
+          zone_type: zoneType,
+          last_message_at: zone.last_message_at,
+          message_count: zone.message_count || 0,
+          position: zone.position || 0,
+        };
+      });
+
+      console.log("Loaded zones for space:", spaceId, zonesData);
       setZones(zonesData);
 
       // Auto-select first zone if none selected
       if (zonesData.length > 0 && !selectedZoneId) {
         onSelectZone(zonesData[0].id);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to load zones:", error);
+      setError(`Failed to load zones: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -82,7 +107,7 @@ export default function ZonesList({
       case "flow":
         return <IconTable size={20} />;
       case "calendar":
-        return <IconTable size={20} />; // TODO: Add calendar icon
+        return <IconCalendar size={20} />;
       default:
         return <IconMessage size={20} />;
     }
@@ -110,6 +135,21 @@ export default function ZonesList({
     );
   }
 
+  if (error) {
+    return (
+      <section className="py-4 flex flex-col items-center justify-center w-full text-center">
+        <p className="text-red-400 text-sm mb-2">Error loading zones</p>
+        <p className="text-neutral-50/70 text-xs mb-2">{error}</p>
+        <button
+          className="text-xs px-3 py-1 bg-neutral-50/20 rounded-full hover:bg-neutral-50/30 transition-colors"
+          onClick={() => selectedSpaceId && loadZones(selectedSpaceId)}
+        >
+          Retry
+        </button>
+      </section>
+    );
+  }
+
   if (zones.length === 0) {
     return (
       <section className="py-4 flex flex-col items-center justify-center w-full text-center">
@@ -118,10 +158,7 @@ export default function ZonesList({
         </p>
         <button
           className="text-xs px-3 py-1 bg-neutral-50/20 rounded-full hover:bg-neutral-50/30 transition-colors"
-          onClick={() => {
-            // TODO: Implement create zone functionality
-            console.log("Create zone clicked");
-          }}
+          onClick={onCreateZone}
         >
           Create Zone
         </button>
@@ -165,12 +202,6 @@ export default function ZonesList({
           )}
         </div>
       ))}
-
-      {/* Create new zone option */}
-      <div className="px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-neutral-900/20 w-full transition-all duration-200 rounded-lg mt-2 border-t border-neutral-50/20">
-        <IconMessage size={16} className="text-neutral-50/50" />
-        <span className="text-sm text-neutral-50/70">Create Zone</span>
-      </div>
     </section>
   );
 }

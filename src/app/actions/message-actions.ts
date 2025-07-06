@@ -3,85 +3,34 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { addMessageToCache, invalidateZoneCache } from "@/utils/cache/redis";
+import { checkPermission, PERMISSIONS } from "@/utils/permissions";
 
 export async function createSpace(name: string, description?: string) {
-  const supabase = await createClient();
-
   try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      return { success: false, error: "Not authenticated" };
+    const response = await fetch("/api/spaces", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        description,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: result.error || "Failed to create space",
+      };
     }
 
-    // Create space
-    const { data: space, error: spaceError } = await supabase
-      .from("spaces")
-      .insert({
-        name,
-        description: description || null,
-        created_by: user.id,
-        is_public: false,
-        member_count: 1,
-      })
-      .select()
-      .single();
-
-    if (spaceError) throw spaceError;
-
-    // Add user as space member
-    const { error: memberError } = await supabase.from("space_members").insert({
-      space_id: space.id,
-      user_id: user.id,
-      role: "owner",
-      joined_at: new Date().toISOString(),
-    });
-
-    if (memberError) throw memberError;
-
-    // Create default zones
-    const defaultZones = [
-      { name: "general", description: "General discussion", zone_type: "chat" },
-      {
-        name: "random",
-        description: "Random conversations",
-        zone_type: "chat",
-      },
-      { name: "tasks", description: "Project tasks", zone_type: "flow" },
-    ];
-
-    const { data: zones, error: zonesError } = await supabase
-      .from("zones")
-      .insert(
-        defaultZones.map((zone, index) => ({
-          ...zone,
-          space_id: space.id,
-          created_by: user.id,
-          position: index,
-        })),
-      )
-      .select();
-
-    if (zonesError) throw zonesError;
-
-    // Create welcome message
-    const { error: messageError } = await supabase.from("messages").insert({
-      content: `🎉 Welcome to ${name}! This is your new space for collaboration.`,
-      sender_id: user.id,
-      sender_username:
-        user.user_metadata?.username || user.email?.split("@")[0] || "system",
-      space_id: space.id,
-      zone_id: zones[0].id,
-      message_type: "system",
-    });
-
-    if (messageError) throw messageError;
-
-    return { success: true, space, zones };
+    return result;
   } catch (error: any) {
     console.error("Failed to create space:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: "Network error" };
   }
 }
 
@@ -157,6 +106,25 @@ export async function sendMessage(
   messageType: "text" | "system" = "text",
 ) {
   const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { success: false, error: "Not authenticated" };
+  }
+
+  // Check permission using the new system
+  const hasPermission = await checkPermission(
+    user.id,
+    spaceId,
+    PERMISSIONS.SEND_MESSAGES,
+    zoneId,
+  );
+
+  if (!hasPermission) {
+    return { success: false, error: "Not authorized to send messages" };
+  }
 
   try {
     const {

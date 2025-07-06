@@ -1,13 +1,14 @@
+// /components/layout/focus-sidebar.tsx
+import { useState } from "react";
 import {
-  IconMessage,
   IconMessagePlus,
   IconSearch,
-  IconTable,
   IconTablePlus,
   IconUsers,
 } from "@tabler/icons-react";
 import { View } from "@/types";
 import ZonesList from "@/components/zones/zones-list";
+import NewZoneModal from "@/components/modals/new-zone-modal";
 
 interface FocusSidebarProps {
   selectedSpaceId: string | null;
@@ -22,6 +23,8 @@ export default function FocusSidebar({
   onSelectZone,
   onViewChange,
 }: FocusSidebarProps) {
+  const [showCreateZoneModal, setShowCreateZoneModal] = useState(false);
+
   return (
     <>
       <section className={`px-4 py-4 flex gap-4`}>
@@ -36,7 +39,7 @@ export default function FocusSidebar({
 
         <button
           onClick={() => {
-            onViewChange("members");
+            setShowCreateZoneModal(true);
           }}
           className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full hover:text-neutral-50 transition-all duration-500 ease-in-out`}
         >
@@ -45,9 +48,10 @@ export default function FocusSidebar({
 
         <button
           onClick={() => {
-            onViewChange("members");
+            // TODO: Create new flow modal and show
           }}
           className={`cursor-pointer grid place-content-center w-10 h-10 hover:bg-kafuffle-primary rounded-full hover:text-neutral-50 transition-all duration-500 ease-in-out`}
+          title="Create new zone"
         >
           <IconTablePlus />
         </button>
@@ -68,7 +72,25 @@ export default function FocusSidebar({
         selectedSpaceId={selectedSpaceId}
         selectedZoneId={selectedZoneId}
         onSelectZone={onSelectZone}
+        onCreateZone={() => setShowCreateZoneModal(true)}
       />
+
+      {/* TODO: Flow List should go here */}
+
+      {/* Create Zone Modal */}
+      {selectedSpaceId && (
+        <NewZoneModal
+          isOpen={showCreateZoneModal}
+          onClose={() => setShowCreateZoneModal(false)}
+          spaceId={selectedSpaceId}
+          onZoneCreated={() => {
+            // Zones list will automatically refresh via subscription
+            setShowCreateZoneModal(false);
+          }}
+        />
+      )}
+
+      {/* TODO: Create Flow Modal should go here */}
     </>
   );
 }

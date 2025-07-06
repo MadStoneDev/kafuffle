@@ -1,4 +1,4 @@
-// /components/layout/main-window.tsx (updated)
+// /components/layout/main-window.tsx (updated with debug support)
 import { JSX } from "react";
 import { View } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,8 +7,13 @@ import SpaceView from "@/components/spaces/space-view";
 import SpacesList from "@/components/spaces/spaces-list";
 import Notifications from "@/components/account/notifications";
 import Profile from "@/components/account/profile";
+import AboutPage from "@/components/layout/about-page";
+import HelpPage from "@/components/layout/help-page";
+import HomePage from "@/components/layout/landing-page";
+import DebugConsole from "@/components/debug/debug-console";
 
 interface MainWindowProps {
+  isAuthenticated?: boolean;
   selectedSpaceId: string | null;
   selectedZoneId: string | null;
   currentView: View;
@@ -43,6 +48,7 @@ const pageTransition = {
 };
 
 export default function MainWindow({
+  isAuthenticated = false,
   selectedSpaceId = null,
   selectedZoneId,
   currentView = "spaces",
@@ -50,6 +56,21 @@ export default function MainWindow({
   onSelectSpace,
   onSelectZone,
 }: MainWindowProps): JSX.Element {
+  // Debug console should only show on spaces view when authenticated
+  const shouldShowDebug = isAuthenticated && currentView === "spaces";
+
+  if (currentView === "about") {
+    return <AboutPage onViewChange={onViewChange} />;
+  }
+
+  if (currentView === "help") {
+    return <HelpPage onViewChange={onViewChange} />;
+  }
+
+  if (!isAuthenticated) {
+    return <HomePage onViewChange={onViewChange} />;
+  }
+
   const renderCurrentView = () => {
     // Handle account-related views
     if (currentView === "notifications") {
@@ -94,9 +115,17 @@ export default function MainWindow({
           exit="out"
           variants={pageVariants}
           transition={pageTransition}
-          className={`h-full`}
+          className={`h-full relative`}
         >
           <SpacesList onSelectSpace={onSelectSpace} />
+          {/* Debug console for spaces list */}
+          {shouldShowDebug && (
+            <DebugConsole
+              spaceId={selectedSpaceId}
+              zoneId={selectedZoneId}
+              context="spaces-list"
+            />
+          )}
         </motion.div>
       );
     } else {
@@ -108,21 +137,29 @@ export default function MainWindow({
           exit="out"
           variants={pageVariants}
           transition={pageTransition}
-          className={`h-full`}
+          className={`h-full relative`}
         >
           <SpaceView
             spaceId={selectedSpaceId}
             onSelectSpace={onSelectSpace}
-            selectedZoneId={selectedZoneId || "1"}
+            selectedZoneId={selectedZoneId || ""}
             onSelectZone={onSelectZone}
           />
+          {/* Debug console for space view */}
+          {shouldShowDebug && (
+            <DebugConsole
+              spaceId={selectedSpaceId}
+              zoneId={selectedZoneId}
+              context="space-view"
+            />
+          )}
         </motion.div>
       );
     }
   };
 
   return (
-    <div className={`flex-grow`}>
+    <div className={`flex-grow overflow-x-auto`}>
       <AnimatePresence mode="wait">{renderCurrentView()}</AnimatePresence>
     </div>
   );

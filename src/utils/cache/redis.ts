@@ -1,204 +1,174 @@
 ﻿// /utils/cache/redis.ts
 import { Redis } from "@upstash/redis";
+import { createClient } from "@/utils/supabase/client";
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-// Cache keys
-const CACHE_KEYS = {
-  zoneMessages: (zoneId: string) => `zone:${zoneId}:messages`,
-  userSpaces: (userId: string) => `user:${userId}:spaces`,
-  spaceZones: (spaceId: string) => `space:${spaceId}:zones`,
-  userPresence: (userId: string) => `presence:${userId}`,
-} as const;
+// Cache functions for spaces
+export async function getUserSpacesWithCache(userId: string) {
+  const cacheKey = `user:${userId}:spaces`;
 
-// Cache durations (in seconds)
-const CACHE_TTL = {
-  messages: 300, // 5 minutes
-  spaces: 600, // 10 minutes
-  zones: 600, // 10 minutes
-  presence: 30, // 30 seconds
-} as const;
-
-// Message caching with write-through pattern
-export async function getCachedMessages(zoneId: string) {
   try {
-    const cached = await redis.get(CACHE_KEYS.zoneMessages(zoneId));
-    return cached ? JSON.parse(cached as string) : null;
-  } catch (error) {
-    console.error("Redis get error:", error);
-    return null;
-  }
-}
-
-export async function setCachedMessages(zoneId: string, messages: any[]) {
-  try {
-    await redis.setex(
-      CACHE_KEYS.zoneMessages(zoneId),
-      CACHE_TTL.messages,
-      JSON.stringify(messages),
-    );
-  } catch (error) {
-    console.error("Redis set error:", error);
-  }
-}
-
-export async function addMessageToCache(zoneId: string, message: any) {
-  try {
-    // Get current cached messages
-    const cached = await getCachedMessages(zoneId);
+    // Try to get from cache first
+    const cached = await redis.get(cacheKey);
     if (cached) {
-      // Add new message and keep only latest 50
-      const updatedMessages = [...cached, message].slice(-50);
-      await setCachedMessages(zoneId, updatedMessages);
+      console.log("Cache hit for user spaces");
+      return JSON.parse(cached as string);
     }
   } catch (error) {
-    console.error("Redis add message error:", error);
+    console.warn("Redis error, falling back to DB:", error);
   }
-}
 
-// User spaces caching
-export async function getCachedUserSpaces(userId: string) {
+  // If not in cache, fetch from database
+  console.log("Cache miss, fetching from database");
+  const supabase = createClient();
+
+  // Fixed query - using proper filtering
+  const { data, error } = await supabase
+    .from("spaces")
+    .select(
+      `
+      *,
+      space_members!inner(
+        user_id,
+        role
+      ),
+      zones(
+        id,
+        name,
+        zone_type,
+        last_message_at,
+        message_count
+      )
+    `,
+    )
+    .eq("space_members.user_id", userId)
+    .is("archived_at", null)
+    .order("last_activity_at", { ascending: false, nullsFirst: false });
+
+  if (error) {
+    console.error("Database query error:", error);
+    throw error;
+  }
+
+  console.log(`Found ${data?.length || 0} spaces for user`);
+
+  // Cache for 1 hour
   try {
-    const cached = await redis.get(CACHE_KEYS.userSpaces(userId));
-    return cached ? JSON.parse(cached as string) : null;
+    if (data && data.length > 0) {
+      await redis.setex(cacheKey, 3600, JSON.stringify(data));
+      console.log("Cached spaces data");
+    }
   } catch (error) {
-    console.error("Redis get spaces error:", error);
-    return null;
+    console.warn("Failed to cache spaces:", error);
   }
+
+  return data || [];
 }
 
-export async function setCachedUserSpaces(userId: string, spaces: any[]) {
+// Cache functions for zones
+export async function getSpaceZonesWithCache(spaceId: string) {
+  const cacheKey = `space:${spaceId}:zones`;
+
   try {
-    await redis.setex(
-      CACHE_KEYS.userSpaces(userId),
-      CACHE_TTL.spaces,
-      JSON.stringify(spaces),
-    );
+    const cached = await redis.get(cacheKey);
+    if (cached) {
+      return JSON.parse(cached as string);
+    }
   } catch (error) {
-    console.error("Redis set spaces error:", error);
+    console.warn("Redis error, falling back to DB:", error);
   }
-}
 
-// Zone caching
-export async function getCachedSpaceZones(spaceId: string) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("zones")
+    .select("*")
+    .eq("space_id", spaceId)
+    .is("archived_at", null)
+    .order("position", { ascending: true });
+
+  if (error) throw error;
+
+  // Cache for 1 hour
   try {
-    const cached = await redis.get(CACHE_KEYS.spaceZones(spaceId));
-    return cached ? JSON.parse(cached as string) : null;
+    await redis.setex(cacheKey, 3600, JSON.stringify(data));
   } catch (error) {
-    console.error("Redis get zones error:", error);
-    return null;
+    console.warn("Failed to cache zones:", error);
   }
+
+  return data || [];
 }
 
-export async function setCachedSpaceZones(spaceId: string, zones: any[]) {
-  try {
-    await redis.setex(
-      CACHE_KEYS.spaceZones(spaceId),
-      CACHE_TTL.zones,
-      JSON.stringify(zones),
-    );
-  } catch (error) {
-    console.error("Redis set zones error:", error);
-  }
-}
-
-// User presence caching
-export async function setUserPresence(userId: string, presence: any) {
-  try {
-    await redis.setex(
-      CACHE_KEYS.userPresence(userId),
-      CACHE_TTL.presence,
-      JSON.stringify(presence),
-    );
-  } catch (error) {
-    console.error("Redis set presence error:", error);
-  }
-}
-
-export async function getUserPresence(userId: string) {
-  try {
-    const cached = await redis.get(CACHE_KEYS.userPresence(userId));
-    return cached ? JSON.parse(cached as string) : null;
-  } catch (error) {
-    console.error("Redis get presence error:", error);
-    return null;
-  }
-}
-
-// Cache invalidation helpers
-export async function invalidateZoneCache(zoneId: string) {
-  try {
-    await redis.del(CACHE_KEYS.zoneMessages(zoneId));
-  } catch (error) {
-    console.error("Redis invalidate zone error:", error);
-  }
-}
-
-export async function invalidateUserSpacesCache(userId: string) {
-  try {
-    await redis.del(CACHE_KEYS.userSpaces(userId));
-  } catch (error) {
-    console.error("Redis invalidate user spaces error:", error);
-  }
-}
-
-// Cached data fetching with fallback to database
-import {
-  getZoneMessages,
-  getUserSpaces,
-  getSpaceZones,
-} from "@/utils/database/queries";
-
+// Cache functions for messages
 export async function getMessagesWithCache(zoneId: string) {
-  // Try cache first
-  let messages = await getCachedMessages(zoneId);
+  const cacheKey = `zone:${zoneId}:messages`;
 
-  if (!messages) {
-    // Fallback to database
-    messages = await getZoneMessages(zoneId);
-
-    // Cache the result
-    if (messages.length > 0) {
-      await setCachedMessages(zoneId, messages);
+  try {
+    const cached = await redis.get(cacheKey);
+    if (cached) {
+      return JSON.parse(cached as string);
     }
+  } catch (error) {
+    console.warn("Redis error, falling back to DB:", error);
+  }
+
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("messages")
+    .select(
+      `
+      *,
+      profiles:sender_id(username, display_name, avatar_url),
+      media_files(*)
+    `,
+    )
+    .eq("zone_id", zoneId)
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  if (error) throw error;
+
+  const messages = (data || []).reverse();
+
+  // Cache for 30 minutes
+  try {
+    await redis.setex(cacheKey, 1800, JSON.stringify(messages));
+  } catch (error) {
+    console.warn("Failed to cache messages:", error);
   }
 
   return messages;
 }
 
-export async function getUserSpacesWithCache(userId: string) {
-  // Try cache first
-  let spaces = await getCachedUserSpaces(userId);
+// Add message to cache
+export async function addMessageToCache(zoneId: string, message: any) {
+  const cacheKey = `zone:${zoneId}:messages`;
 
-  if (!spaces) {
-    // Fallback to database
-    spaces = await getUserSpaces(userId);
-
-    // Cache the result
-    if (spaces.length > 0) {
-      await setCachedUserSpaces(userId, spaces);
+  try {
+    const existing = await redis.get(cacheKey);
+    if (existing) {
+      const messages = JSON.parse(existing as string);
+      messages.push(message);
+      // Keep only last 50 messages
+      const trimmed = messages.slice(-50);
+      await redis.setex(cacheKey, 1800, JSON.stringify(trimmed));
     }
+  } catch (error) {
+    console.warn("Failed to update message cache:", error);
   }
-
-  return spaces;
 }
 
-export async function getSpaceZonesWithCache(spaceId: string) {
-  // Try cache first
-  let zones = await getCachedSpaceZones(spaceId);
-
-  if (!zones) {
-    // Fallback to database
-    zones = await getSpaceZones(spaceId);
-
-    // Cache the result
-    if (zones.length > 0) {
-      await setCachedSpaceZones(spaceId, zones);
-    }
+// Invalidate zone cache
+export async function invalidateZoneCache(zoneId: string) {
+  const cacheKey = `zone:${zoneId}:messages`;
+  try {
+    await redis.del(cacheKey);
+  } catch (error) {
+    console.warn("Failed to invalidate cache:", error);
   }
-
-  return zones;
 }

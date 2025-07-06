@@ -1,7 +1,8 @@
 // /components/layout/app-container.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+
 import { createClient } from "@/utils/supabase/client";
 import { initializeUserData } from "@/app/actions/message-actions";
 import { ensureUserProfile } from "@/app/actions/profile-actions";
@@ -9,11 +10,13 @@ import { ensureUserProfile } from "@/app/actions/profile-actions";
 import MainWindow from "@/components/layout/main-window";
 import NavigateSidebar from "@/components/layout/navigate-sidebar";
 import ContextSidebar from "@/components/layout/context-sidebar";
-import HomePage from "@/components/layout/landing-page";
 
-import { View } from "@/types";
 import { useAppState } from "@/utils/state/app-state";
 import { useMultiAccount } from "@/utils/auth/multi-account";
+import { usePersistedView } from "@/hooks/use-persisted-view";
+
+import { useReactNativeSwipe } from "@/hooks/use-react-native-swipe";
+import { useOutsideClick } from "@/hooks/use-outside-click";
 
 export default function AppContainer() {
   // Use the custom state management hook
@@ -22,14 +25,63 @@ export default function AppContainer() {
 
   const { storeCurrentUser } = useMultiAccount();
 
+  // Use persisted view hook instead of local state
+  const [currentView, setCurrentView] = usePersistedView();
+
   // Local UI state
-  const [navigateSidebarOpen, setNavigateSidebarOpen] = useState(false);
-  const [contextSidebarOpen, setContextSidebarOpen] = useState(false);
-  const [currentView, setCurrentView] = useState<View>("spaces");
   const [isInitializing, setIsInitializing] = useState(false);
   const [initializationComplete, setInitializationComplete] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
+  const [navigateSidebarOpen, setNavigateSidebarOpen] = useState(false);
+  const [contextSidebarOpen, setContextSidebarOpen] = useState(false);
+
+  // Close both sidebars
+  const closeBothSidebars = useCallback(() => {
+    setNavigateSidebarOpen(false);
+    setContextSidebarOpen(false);
+  }, []);
+
+  // Swipe gesture handlers
+  const handleOpenLeft = useCallback(() => {
+    setNavigateSidebarOpen(true);
+    setContextSidebarOpen(false); // Close right when opening left
+  }, []);
+
+  const handleOpenRight = useCallback(() => {
+    // Only allow right sidebar when authenticated and on spaces view
+    if (isAuthenticated && currentView === "spaces") {
+      setContextSidebarOpen(true);
+      setNavigateSidebarOpen(false); // Close left when opening right
+    }
+  }, [isAuthenticated, currentView]);
+
+  const handleCloseLeft = useCallback(() => {
+    setNavigateSidebarOpen(false);
+  }, []);
+
+  const handleCloseRight = useCallback(() => {
+    setContextSidebarOpen(false);
+  }, []);
+
+  // Hook up React Native-like swipe gestures
+  useReactNativeSwipe({
+    onOpenLeft: handleOpenLeft,
+    onOpenRight: handleOpenRight,
+    onCloseLeft: handleCloseLeft,
+    onCloseRight: handleCloseRight,
+    leftSidebarOpen: navigateSidebarOpen,
+    rightSidebarOpen: contextSidebarOpen,
+    edgeSize: 30,
+    minSwipeDistance: 100,
+    maxSwipeTime: 400,
+  });
+
+  // Click outside to close - only when sidebars are open
+  const outsideClickRef = useOutsideClick(
+    closeBothSidebars,
+    navigateSidebarOpen || contextSidebarOpen,
+  );
 
   // Check authentication status
   useEffect(() => {
@@ -56,15 +108,16 @@ export default function AppContainer() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
-      if (!session) {
-        // Reset state when user logs out
+
+      // Only reset view on actual SIGN_OUT event, not just missing session
+      if (event === "SIGNED_OUT") {
         selectSpace(null);
         setCurrentView("spaces");
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [selectSpace]);
+  }, [selectSpace, setCurrentView]); // Add setCurrentView to dependencies
 
   // Initialize new user data
   useEffect(() => {
@@ -97,17 +150,6 @@ export default function AppContainer() {
         // If no spaces, initialize with default data
         if (!spaces || spaces.length === 0) {
           console.log("New user detected, initializing default data...");
-          const result = await initializeUserData();
-
-          if (result.success) {
-            console.log("User data initialized successfully");
-            // Force a refresh of the spaces list
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          } else {
-            console.error("Failed to initialize user data:", result.error);
-          }
         }
 
         setInitializationComplete(true);
@@ -146,42 +188,61 @@ export default function AppContainer() {
   }
 
   return (
-    <main className={`p-3 flex gap-3 h-screen bg-black`}>
-      {/* Navigate Sidebar */}
-      <NavigateSidebar
-        isOpen={navigateSidebarOpen}
-        onOpen={setNavigateSidebarOpen}
+    <main ref={outsideClickRef} className="p-3 flex gap-3 h-screen bg-black">
+      {/* Navigate Sidebar with overlay */}
+      <div
+        className={`${navigateSidebarOpen ? "fixed inset-0 z-40 md:relative md:inset-auto md:z-auto" : ""}`}
+      >
+        {/* Mobile overlay */}
+        {navigateSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 md:hidden"
+            onClick={() => setNavigateSidebarOpen(false)}
+          />
+        )}
+        <NavigateSidebar
+          isOpen={navigateSidebarOpen}
+          onOpen={setNavigateSidebarOpen}
+          currentView={currentView}
+          onViewChange={setCurrentView}
+          isAuthenticated={isAuthenticated}
+        />
+      </div>
+
+      {/* Main Content - MainWindow */}
+      <MainWindow
+        isAuthenticated={isAuthenticated}
+        selectedSpaceId={selectedSpaceId}
+        selectedZoneId={selectedZoneId}
         currentView={currentView}
         onViewChange={setCurrentView}
-        isAuthenticated={isAuthenticated}
+        onSelectSpace={selectSpace}
+        onSelectZone={selectZone}
       />
 
-      {/* Main Content - HomePage when not authenticated, MainWindow when authenticated */}
-      {isAuthenticated ? (
-        <MainWindow
-          selectedSpaceId={selectedSpaceId}
-          selectedZoneId={selectedZoneId}
-          currentView={currentView}
-          onViewChange={setCurrentView}
-          onSelectSpace={selectSpace}
-          onSelectZone={selectZone}
-        />
-      ) : (
-        <HomePage onViewChange={setCurrentView} />
-      )}
-
-      {/* Context (Discover/Focus) Sidebar - only show when authenticated and viewing spaces */}
+      {/* Context Sidebar with overlay - only show when authenticated and viewing spaces */}
       {isAuthenticated && currentView === "spaces" && (
-        <ContextSidebar
-          isOpen={contextSidebarOpen}
-          onOpen={setContextSidebarOpen}
-          selectedSpaceId={selectedSpaceId}
-          selectedZoneId={selectedZoneId}
-          onSelectSpace={selectSpace}
-          onSelectZone={selectZone}
-          currentView={currentView}
-          onViewChange={setCurrentView}
-        />
+        <div
+          className={`${contextSidebarOpen ? "fixed inset-0 z-40 md:relative md:inset-auto md:z-auto" : ""}`}
+        >
+          {/* Mobile overlay */}
+          {contextSidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black/50 md:hidden"
+              onClick={() => setContextSidebarOpen(false)}
+            />
+          )}
+          <ContextSidebar
+            isOpen={contextSidebarOpen}
+            onOpen={setContextSidebarOpen}
+            selectedSpaceId={selectedSpaceId}
+            selectedZoneId={selectedZoneId}
+            onSelectSpace={selectSpace}
+            onSelectZone={selectZone}
+            currentView={currentView}
+            onViewChange={setCurrentView}
+          />
+        </div>
       )}
     </main>
   );
