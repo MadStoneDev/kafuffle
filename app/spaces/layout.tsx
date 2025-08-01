@@ -1,10 +1,7 @@
-﻿import SpacesSidebar from "@/components/user/spaces-sidebar";
+﻿import { ReactNode } from "react";
+import SpacesSidebar from "@/components/user/spaces-sidebar";
 
-export default function SpacesLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function SpacesLayout({ children }: { children: ReactNode }) {
   return (
     <main className={`flex h-screen bg-background overflow-hidden`}>
       {/* Spaces */}

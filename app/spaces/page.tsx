@@ -1,7 +1,11 @@
 ﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
-import { IconCirclePlus, IconMoodWink } from "@tabler/icons-react";
+import {
+  IconChevronLeft,
+  IconCirclePlus,
+  IconMoodWink,
+} from "@tabler/icons-react";
 
 import { users } from "@/lib/dummy-data/users";
 import { messages } from "@/lib/dummy-data/messages";
@@ -21,7 +25,7 @@ export default function SpacesPage() {
   }, []);
 
   return (
-    <div className={`py-4 pr-4 flex gap-3 w-full h-screen`}>
+    <div className={`relative py-4 pr-4 flex gap-3 w-full h-screen`}>
       {/* Chat */}
       <section
         className={`flex-grow flex flex-col justify-end rounded-3xl border border-foreground/20 overflow-hidden`}
