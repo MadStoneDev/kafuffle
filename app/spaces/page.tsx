@@ -104,15 +104,15 @@ export default function SpacesPage() {
 
       {/* Zones */}
       <section
-        className={`absolute lg:relative right-0 top-0 bottom-0 flex items-center ${sidebarExpanded ? "z-50" : "z-40"}`}
+        className={`absolute lg:relative right-0 lg:right-auto top-0 lg:top-auto bottom-0 lg:bottom-auto flex items-center ${sidebarExpanded ? "z-50" : "z-40"}`}
       >
         <div
           onClick={() => setSidebarExpanded(!sidebarExpanded)}
-          className={`${sidebarExpanded ? "" : "pointer-events-none opacity-0"} fixed top-0 right-0 bottom-0 left-0 bg-background/70 z-40 transition-all duration-300 ease-in-out`}
+          className={`lg:hidden ${sidebarExpanded ? "" : "pointer-events-none opacity-0"} fixed top-0 right-0 bottom-0 left-0 bg-background/70 z-40 transition-all duration-300 ease-in-out`}
         />
 
         <div
-          className={`opacity-50 hover:opacity-100 z-50 transition-all duration-300 ease-in-out`}
+          className={`lg:hidden opacity-50 hover:opacity-100 z-50 transition-all duration-300 ease-in-out`}
         >
           <button
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
@@ -124,7 +124,7 @@ export default function SpacesPage() {
           </button>
         </div>
         <div
-          className={`w-[250px] ${sidebarExpanded ? "max-w-[250px] border-foreground/20" : "max-w-0 border-transparent"} h-full bg-background lg:rounded-3xl border transition-all duration-300 ease-in-out`}
+          className={`w-[250px] ${sidebarExpanded ? "max-w-[250px] border-foreground/20" : "max-w-0 border-transparent"} lg:max-w-[250px] h-full bg-background lg:rounded-3xl border lg:border-foreground/20 transition-all duration-300 ease-in-out`}
         ></div>
       </section>
     </div>

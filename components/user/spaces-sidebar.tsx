@@ -19,12 +19,12 @@ export default function SpacesSidebar() {
     >
       <div
         onClick={() => setIsExpanded(!isExpanded)}
-        className={`${isExpanded ? "" : "pointer-events-none opacity-0"} fixed top-0 right-0 bottom-0 left-0 bg-background/70 transition-all duration-300 ease-in-out z-40`}
+        className={`lg:hidden ${isExpanded ? "" : "pointer-events-none opacity-0"} fixed top-0 right-0 bottom-0 left-0 bg-background/70 transition-all duration-300 ease-in-out z-40`}
       />
       <div
         className={`flex flex-col justify-between items-center gap-2 ${
           isExpanded ? "max-w-[3.75rem]" : "max-w-0"
-        } h-full bg-background overflow-hidden z-50 transition-all duration-300 ease-in-out`}
+        } lg:max-w-[3.75rem] h-full bg-background overflow-hidden z-50 transition-all duration-300 ease-in-out`}
       >
         <ServerNavigation />
 
@@ -40,7 +40,7 @@ export default function SpacesSidebar() {
       </div>
 
       <div
-        className={`opacity-35 hover:opacity-100 z-50 transition-all duration-300 ease-in-out`}
+        className={`lg:hidden opacity-35 hover:opacity-100 z-50 transition-all duration-300 ease-in-out`}
       >
         <button
           onClick={() => setIsExpanded(!isExpanded)}
