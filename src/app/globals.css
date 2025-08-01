@@ -1,7 +1,0 @@
-@import "tailwindcss";
-
-@theme  {
-  --color-kafuffle-primary: #9B002D;
-}
-
-@custom-variant dark (&:where(.dark, .dark *));
