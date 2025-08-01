@@ -6,14 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="11ad73e1-3d19-4a7b-b0c0-c4eb472d5693" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/account/notifications.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/account/notifications.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/app-container.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/app-container.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/main-window.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/main-window.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/spaces/space-view.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/spaces/space-view.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/spaces/spaces-list.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/spaces/spaces-list.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/spaces/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/spaces/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/user/spaces-sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/user/spaces-sidebar.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,26 +34,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
-    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;G:\\Development-Sandbox\\_Rumblebuffin\\kafuffle\\node_modules\\prettier&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;G:\\Development-Sandbox\\_Rumblebuffin\\kafuffle\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "js.debugger.nextJs.config.created.client": "true",
+    "js.debugger.nextJs.config.created.server": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "/Users/richardhaddad/.nvm/versions/node/v20.18.2/lib/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "ts.external.directory.path": "/Users/richardhaddad/Development-Sandbox/kafuffle/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="npm.Next.js: server-side">
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3489/">
       <method v="2" />
@@ -88,6 +82,8 @@
       <workItem from="1749989318311" duration="6080000" />
       <workItem from="1749996224530" duration="17730000" />
       <workItem from="1750198829337" duration="6207000" />
+      <workItem from="1754040117038" duration="84000" />
+      <workItem from="1754040397625" duration="2984000" />
     </task>
     <servers />
   </component>

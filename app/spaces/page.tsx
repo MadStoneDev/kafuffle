@@ -13,7 +13,11 @@ import Message from "@/components/messages/message";
 import processMessages from "@/lib/messages/handle-messages";
 
 export default function SpacesPage() {
+  // Refs
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // States
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [allMessages, setAllMessages] = useState<any[]>(
     processMessages(messages),
   );
@@ -25,7 +29,9 @@ export default function SpacesPage() {
   }, []);
 
   return (
-    <div className={`relative py-4 pr-4 flex gap-3 w-full h-screen`}>
+    <div
+      className={`relative py-4 pr-4 flex items-stretch gap-3 w-full h-screen`}
+    >
       {/* Chat */}
       <section
         className={`flex-grow flex flex-col justify-end rounded-3xl border border-foreground/20 overflow-hidden`}
@@ -98,8 +104,29 @@ export default function SpacesPage() {
 
       {/* Zones */}
       <section
-        className={`w-[250px] max-w-[15%] rounded-3xl border border-foreground/20`}
-      ></section>
+        className={`absolute lg:relative right-0 top-0 bottom-0 flex items-center ${sidebarExpanded ? "z-50" : "z-40"}`}
+      >
+        <div
+          onClick={() => setSidebarExpanded(!sidebarExpanded)}
+          className={`${sidebarExpanded ? "" : "pointer-events-none opacity-0"} fixed top-0 right-0 bottom-0 left-0 bg-background/70 z-40 transition-all duration-300 ease-in-out`}
+        />
+
+        <div
+          className={`opacity-50 hover:opacity-100 z-50 transition-all duration-300 ease-in-out`}
+        >
+          <button
+            onClick={() => setSidebarExpanded(!sidebarExpanded)}
+            className={`bg-foreground rounded-l-full`}
+          >
+            <IconChevronLeft
+              className={`${sidebarExpanded ? "rotate-180" : ""} text-kafuffle transition-all duration-300 ease-in-out`}
+            />
+          </button>
+        </div>
+        <div
+          className={`w-[250px] ${sidebarExpanded ? "max-w-[250px] border-foreground/20" : "max-w-0 border-transparent"} h-full bg-background lg:rounded-3xl border transition-all duration-300 ease-in-out`}
+        ></div>
+      </section>
     </div>
   );
 }

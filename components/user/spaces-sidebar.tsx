@@ -14,24 +14,17 @@ export default function SpacesSidebar() {
   const [isExpanded, setIsExpanded] = useState(true);
 
   return (
-    <aside className={`relative py-4 transition-all duration-300 ease-in-out`}>
-      <button
-        className={`absolute right-0 ${
-          isExpanded ? "" : "translate-x-full"
-        } top-1/2 z-50 transition-all duration-300 ease-in-out`}
+    <aside
+      className={`absolute lg:relative py-4 left-0 top-0 bottom-0 flex items-center transition-all duration-300 ease-in-out ${isExpanded ? "z-50" : "z-40"}`}
+    >
+      <div
         onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <IconChevronLeft
-          className={`${
-            isExpanded ? "" : "rotate-180"
-          } transition-all duration-300 ease-in-out`}
-        />
-      </button>
-
+        className={`${isExpanded ? "" : "pointer-events-none opacity-0"} fixed top-0 right-0 bottom-0 left-0 bg-background/70 transition-all duration-300 ease-in-out z-40`}
+      />
       <div
         className={`flex flex-col justify-between items-center gap-2 ${
           isExpanded ? "max-w-[3.75rem]" : "max-w-0"
-        } h-full overflow-hidden transition-all duration-300 ease-in-out`}
+        } h-full bg-background overflow-hidden z-50 transition-all duration-300 ease-in-out`}
       >
         <ServerNavigation />
 
@@ -44,6 +37,19 @@ export default function SpacesSidebar() {
             <IconSettings className={`text-ravenci-primary`} size={24} />
           </button>
         </section>
+      </div>
+
+      <div
+        className={`opacity-35 hover:opacity-100 z-50 transition-all duration-300 ease-in-out`}
+      >
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className={`bg-foreground rounded-r-full`}
+        >
+          <IconChevronLeft
+            className={`${isExpanded ? "" : "rotate-180"} text-kafuffle transition-all duration-300 ease-in-out`}
+          />
+        </button>
       </div>
     </aside>
   );
