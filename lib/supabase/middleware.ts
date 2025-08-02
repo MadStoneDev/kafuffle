@@ -55,16 +55,15 @@ export async function updateSession(request: NextRequest) {
     "/auth/verify-email",
     "/auth/forgot-password",
     "/auth/magiclink",
-    "/spaces",
   ];
 
   if (
     !allowPaths.includes(request.nextUrl.pathname) &&
+    !request.nextUrl.pathname.startsWith("/spaces") && // Add this check
     !user &&
     !request.nextUrl.pathname.startsWith("/login") &&
     !request.nextUrl.pathname.startsWith("/auth")
   ) {
-    // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);

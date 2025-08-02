@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import ServerAvatar from "@/components/user/server-avatar";
+import { spaces } from "@/lib/dummy-data/spaces";
+import Link from "next/link";
 
 export default function ServerNavigation() {
   // States
@@ -31,12 +33,14 @@ export default function ServerNavigation() {
       <div className={`mb-1 relative w-[90%] min-h-[1px] bg-neutral-500`}></div>
 
       <div className={`flex-1 overflow-y-auto`}>
-        {Array.from({ length: 10 }, (_, index) => index + 1).map((index) => (
-          <button
-            key={index}
-            onClick={() => setSelectedSpaceId(index)}
+        {spaces.map((spaces, index) => (
+          <Link
+            key={index + 1}
+            href={`/spaces/${spaces.id}`}
+            title={spaces.name}
+            onClick={() => setSelectedSpaceId(index + 1)}
             className={`${
-              selectedSpaceId === index
+              selectedSpaceId === index + 1
                 ? "opacity-100"
                 : "opacity-55 dark:opacity-60"
             } hover:opacity-100 dark:hover:opacity-100 transition-all duration-300 ease-in-out`}
@@ -46,9 +50,9 @@ export default function ServerNavigation() {
                 "https://res.cloudinary.com/duhygs5ck/image/upload/f_auto,q_auto/v1740646396/avatar2.jpg"
               }
               alt={"Avatar"}
-              active={selectedSpaceId === index}
+              active={selectedSpaceId === index + 1}
             />
-          </button>
+          </Link>
         ))}
       </div>
     </section>

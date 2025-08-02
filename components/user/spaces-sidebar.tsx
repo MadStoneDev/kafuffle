@@ -11,15 +11,19 @@ import { useState } from "react";
 
 export default function SpacesSidebar() {
   // States
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <aside
-      className={`absolute lg:relative py-4 left-0 top-0 bottom-0 flex items-center transition-all duration-300 ease-in-out ${isExpanded ? "z-50" : "z-40"}`}
+      className={`absolute lg:relative py-4 left-0 top-0 bottom-0 flex items-center transition-all duration-300 ease-in-out ${
+        isExpanded ? "z-50" : "z-40"
+      }`}
     >
       <div
         onClick={() => setIsExpanded(!isExpanded)}
-        className={`lg:hidden ${isExpanded ? "" : "pointer-events-none opacity-0"} fixed top-0 right-0 bottom-0 left-0 bg-background/70 transition-all duration-300 ease-in-out z-40`}
+        className={`lg:hidden ${
+          isExpanded ? "" : "pointer-events-none opacity-0"
+        } fixed top-0 right-0 bottom-0 left-0 bg-background/70 transition-all duration-300 ease-in-out z-40`}
       />
       <div
         className={`flex flex-col justify-between items-center gap-2 ${
@@ -47,7 +51,9 @@ export default function SpacesSidebar() {
           className={`bg-foreground rounded-r-full`}
         >
           <IconChevronLeft
-            className={`${isExpanded ? "" : "rotate-180"} text-kafuffle transition-all duration-300 ease-in-out`}
+            className={`${
+              isExpanded ? "" : "rotate-180"
+            } text-kafuffle transition-all duration-300 ease-in-out`}
           />
         </button>
       </div>
