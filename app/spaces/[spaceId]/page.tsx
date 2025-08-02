@@ -179,7 +179,7 @@ export default function SpacesPage({
 
                 {category.zones.map((zone) => (
                   <article
-                    key={zone.id}
+                    key={category.id + "-" + zone.id}
                     className={`p-1 pr-2 flex justify-between items-center gap-2 hover:bg-foreground/10 rounded-xl`}
                   >
                     <div className={`flex items-center gap-2`}>

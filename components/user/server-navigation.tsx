@@ -1,17 +1,30 @@
 ﻿"use client";
 
 import { useState } from "react";
-import ServerAvatar from "@/components/user/server-avatar";
-import { spaces } from "@/lib/dummy-data/spaces";
 import Link from "next/link";
 
-export default function ServerNavigation() {
+import { spaces } from "@/lib/dummy-data/spaces";
+import ServerAvatar from "@/components/user/server-avatar";
+
+export default function ServerNavigation({
+  spaceId,
+}: {
+  spaceId: string | undefined;
+}) {
+  // Constants
+  const space = spaceId
+    ? spaces.findIndex((space) => space.id === spaceId) + 1
+    : 0;
+
+  console.log(spaces.findIndex((space) => space.id === spaceId) + 1);
+
   // States
-  const [selectedSpaceId, setSelectedSpaceId] = useState<number>(3);
+  const [selectedSpaceId, setSelectedSpaceId] = useState<number>(space);
 
   return (
     <section className={`px-2 flex flex-col items-center gap-2 h-full`}>
-      <button
+      <Link
+        href={`/spaces/me`}
         onClick={() => setSelectedSpaceId(0)}
         className={`${
           selectedSpaceId === 0 ? "opacity-100" : "opacity-55 dark:opacity-60"
@@ -28,7 +41,7 @@ export default function ServerNavigation() {
             />
           }
         />
-      </button>
+      </Link>
 
       <div className={`mb-1 relative w-[90%] min-h-[1px] bg-neutral-500`}></div>
 

@@ -6,10 +6,19 @@ import {
   IconUserFilled,
 } from "@tabler/icons-react";
 
-import ServerNavigation from "@/components/user/server-navigation";
 import { useState } from "react";
+import ServerNavigation from "@/components/user/server-navigation";
 
-export default function SpacesSidebar() {
+import { spaces } from "@/lib/dummy-data/spaces";
+
+interface SpacesSidebarProps {
+  spaceId: string | undefined;
+}
+
+export default function SpacesSidebar({ spaceId }: SpacesSidebarProps) {
+  // Constants
+  const space = spaces.find((space) => space.id === spaceId);
+
   // States
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -30,7 +39,7 @@ export default function SpacesSidebar() {
           isExpanded ? "max-w-[3.75rem]" : "max-w-0"
         } lg:max-w-[3.75rem] h-full bg-background overflow-hidden z-50 transition-all duration-300 ease-in-out`}
       >
-        <ServerNavigation />
+        <ServerNavigation spaceId={spaceId} />
 
         <section className={`flex flex-col items-center gap-4`}>
           <button>
