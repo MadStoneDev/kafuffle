@@ -1,4 +1,14 @@
-﻿import UserAvatar from "@/components/user/user-avatar";
+﻿// /components/messages/message.tsx
+import UserAvatar from "@/components/user/user-avatar";
+import {
+  parseMessage,
+  renderMessageParts,
+} from "@/lib/messages/message-parser";
+import {
+  IconMoodSmile,
+  IconCornerDownLeft,
+  IconDots,
+} from "@tabler/icons-react";
 
 interface MessageProps {
   userAvatar?: string | null;
@@ -57,31 +67,82 @@ export default function Message({
     ? formatTimestamp(messageTimestamp, messageType === "system")
     : "";
 
+  // Parse message content for formatting
+  const parsedContent = messageContent ? parseMessage(messageContent) : [];
+
   switch (messageType) {
     case "system":
       return (
-        <article className={`px-2 flex items-center gap-2`}>
-          <div className={`flex-grow min-h-[1px] bg-foreground/20`}></div>
+        <article className="px-2 flex items-center gap-2">
+          <div className="flex-grow min-h-[1px] bg-foreground/20"></div>
+          <span className="pb-0.5 text-xs opacity-60">{timestamp}</span>
+          <div className="flex-grow min-h-[1px] bg-foreground/20"></div>
+        </article>
+      );
 
-          <span className={`pb-0.5 text-xs opacity-60`}>{timestamp}</span>
-          <div className={`flex-grow min-h-[1px] bg-foreground/20`}></div>
+    case "media":
+      return (
+        <article className="py-2 flex items-start gap-3">
+          <section className="flex-shrink-0 mt-1">
+            <UserAvatar imageSrc={userAvatar || ""} alt={"Avatar"} />
+          </section>
+          <section className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <p className="text-kafuffle text-sm font-medium">{username}</p>
+              <span className="text-xs font-light opacity-50">{timestamp}</span>
+            </div>
+
+            {/* Media content would go here */}
+            <div className="bg-foreground/5 rounded-lg p-3 mb-2">
+              <p className="text-sm opacity-70">📎 Media attachment</p>
+            </div>
+
+            {/* Caption/message content */}
+            {messageContent && (
+              <div className="text-sm leading-relaxed">
+                {renderMessageParts(parsedContent)}
+              </div>
+            )}
+          </section>
         </article>
       );
 
     default:
       return (
-        <article className={`py-2 flex items-center gap-3`}>
-          <section>
+        <article className="py-2 flex items-start gap-3 group hover:bg-foreground/5 -mx-3 px-3 rounded-lg transition-colors">
+          <section className="flex-shrink-0 mt-1">
             <UserAvatar imageSrc={userAvatar || ""} alt={"Avatar"} />
           </section>
-          <section>
-            <div className={`flex items-center gap-2`}>
-              <p className={`text-kafuffle text-sm font-medium`}>{username}</p>
-              <span className={`text-xs font-light opacity-50`}>
-                {timestamp}
-              </span>
+          <section className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <p className="text-kafuffle text-sm font-medium">{username}</p>
+              <span className="text-xs font-light opacity-50">{timestamp}</span>
             </div>
-            <span className={`pb-0.5 text-sm`}>{messageContent}</span>
+            <div className="text-sm leading-relaxed break-words">
+              {renderMessageParts(parsedContent)}
+            </div>
+          </section>
+
+          {/* Message actions (visible on hover) */}
+          <section className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 mt-1">
+            <button
+              className="p-1 hover:bg-foreground/10 rounded text-xs opacity-70 hover:opacity-100"
+              title="Add reaction"
+            >
+              <IconMoodSmile size={14} />
+            </button>
+            <button
+              className="p-1 hover:bg-foreground/10 rounded text-xs opacity-70 hover:opacity-100"
+              title="Reply"
+            >
+              <IconCornerDownLeft size={14} />
+            </button>
+            <button
+              className="p-1 hover:bg-foreground/10 rounded text-xs opacity-70 hover:opacity-100"
+              title="More options"
+            >
+              <IconDots size={14} />
+            </button>
           </section>
         </article>
       );

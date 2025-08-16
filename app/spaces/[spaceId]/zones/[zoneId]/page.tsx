@@ -12,12 +12,14 @@ import { messages } from "@/lib/dummy-data/messages";
 import { spaces } from "@/lib/dummy-data/spaces";
 import { zones } from "@/lib/dummy-data/zones";
 import { setSpace, setZone } from "@/lib/general/local-storage";
+import MessageInput from "@/components/messages/message-input";
 
 export default function ZonePage({
   params,
 }: {
   params: Promise<{ spaceId: string; zoneId: string }>;
 }) {
+  // Hooks
   const { spaceId, zoneId } = use(params);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -26,7 +28,29 @@ export default function ZonePage({
 
   // Filter messages for this zone
   const zoneMessages = messages.filter((message) => message.zoneId === zoneId);
-  const [allMessages] = useState(processMessages(zoneMessages));
+
+  // States
+  const [allMessages, setAllMessages] = useState(processMessages(zoneMessages));
+
+  // Functions
+  const handleSendMessage = (content: string) => {
+    // TODO: Implement actual message sending
+    // For now, just add to local state
+    const newMessage = {
+      id: `temp-${Date.now()}`,
+      authorId: "current-user-id", // You'll need to get this from auth context
+      type: "text",
+      content: content,
+      timestamp: new Date().toISOString(),
+      replyToId: null,
+      spaceId: spaceId,
+      zoneId: zoneId,
+    };
+
+    // Add to messages (you'll want to send this to your backend)
+    setAllMessages((prev) => [...prev, newMessage]);
+    console.log("Sending message:", newMessage);
+  };
 
   useEffect(() => {
     // Update local storage when zone changes
@@ -125,25 +149,7 @@ export default function ZonePage({
       </div>
 
       {/* Message Input */}
-      <div className="p-2">
-        <div className="px-2 flex items-center gap-2 w-full rounded-2xl border border-foreground/20 dark:border-neutral-700 bg-foreground/5 text-sm font-light overflow-hidden">
-          <button className="opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out">
-            <IconCirclePlus />
-          </button>
-
-          <input
-            type="text"
-            placeholder={`Type a message in #${zone.name}...`}
-            className="flex-1 py-3 bg-transparent outline-none"
-          />
-
-          <section className="pl-1 flex gap-2 items-center">
-            <button className="opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out">
-              <IconMoodWink />
-            </button>
-          </section>
-        </div>
-      </div>
+      <MessageInput zoneName={zone.name} onSendMessage={handleSendMessage} />
     </>
   );
 }
