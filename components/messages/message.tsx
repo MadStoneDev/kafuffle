@@ -70,14 +70,16 @@ export default function Message({
 
     default:
       return (
-        <article className={`py-2 flex items-center gap-2`}>
+        <article className={`py-2 flex items-center gap-3`}>
           <section>
             <UserAvatar imageSrc={userAvatar || ""} alt={"Avatar"} />
           </section>
           <section>
             <div className={`flex items-center gap-2`}>
               <p className={`text-kafuffle text-sm font-medium`}>{username}</p>
-              <span className={`text-xs opacity-50`}>{timestamp}</span>
+              <span className={`text-xs font-light opacity-50`}>
+                {timestamp}
+              </span>
             </div>
             <span className={`pb-0.5 text-sm`}>{messageContent}</span>
           </section>
