@@ -1,4 +1,5 @@
 ﻿// /components/messages/message.tsx
+import { useState } from "react";
 import UserAvatar from "@/components/user/user-avatar";
 import {
   parseMessage,
@@ -8,14 +9,16 @@ import {
   IconMoodSmile,
   IconCornerDownLeft,
   IconDots,
+  IconX,
+  IconExternalLink,
 } from "@tabler/icons-react";
 
+import { Message as MessageType, MediaItem } from "@/lib/types/messages";
+
 interface MessageProps {
+  message: MessageType;
   userAvatar?: string | null;
   username?: string | null;
-  messageType?: string;
-  messageContent?: string;
-  messageTimestamp?: string;
 }
 
 const formatTimestamp = (timestamp: string, isSystem: boolean) => {
@@ -56,54 +59,188 @@ const formatTimestamp = (timestamp: string, isSystem: boolean) => {
   }
 };
 
+// Image Preview Modal Component
+interface ImagePreviewModalProps {
+  image: MediaItem;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+function ImagePreviewModal({ image, isOpen, onClose }: ImagePreviewModalProps) {
+  if (!isOpen) return null;
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+      onClick={handleBackdropClick}
+    >
+      <div className="relative max-w-4xl max-h-full">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors"
+          title="Close"
+        >
+          <IconX size={24} />
+        </button>
+
+        {/* Image */}
+        <img
+          src={image.url}
+          alt={image.filename || "Image"}
+          className="max-w-full max-h-[80vh] object-contain rounded-lg"
+        />
+
+        {/* Image info and link */}
+        <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-3 rounded-b-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              {image.filename && (
+                <p className="text-sm font-medium">{image.filename}</p>
+              )}
+              {image.metadata?.width && image.metadata?.height && (
+                <p className="text-xs opacity-80">
+                  {image.metadata.width} × {image.metadata.height}
+                </p>
+              )}
+            </div>
+            <a
+              href={image.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-sm hover:text-blue-300 transition-colors"
+              title="Open in new tab"
+            >
+              <IconExternalLink size={16} />
+              Open original
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Media Grid Component
+interface MediaGridProps {
+  media: MediaItem[];
+}
+
+function MediaGrid({ media }: MediaGridProps) {
+  const [selectedImage, setSelectedImage] = useState<MediaItem | null>(null);
+
+  const images = media.filter((item) => item.type === "image");
+  const otherMedia = media.filter((item) => item.type !== "image");
+
+  if (images.length === 0 && otherMedia.length === 0) return null;
+
+  return (
+    <>
+      <div className="mt-2 space-y-2 max-w-lg">
+        {/* Image grid */}
+        {images.length > 0 && (
+          <div
+            className={`grid gap-2 ${
+              images.length === 1
+                ? "grid-cols-1"
+                : images.length === 2
+                  ? "grid-cols-2"
+                  : images.length === 3
+                    ? "grid-cols-3"
+                    : "grid-cols-2"
+            }`}
+          >
+            {images.map((image, index) => (
+              <div
+                key={index}
+                className="relative cursor-pointer group overflow-hidden rounded-lg bg-foreground/5 border"
+                onClick={() => setSelectedImage(image)}
+              >
+                <img
+                  src={image.url}
+                  alt={image.filename || `Image ${index + 1}`}
+                  className="w-full h-[200px] object-cover transition-transform group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 text-white px-2 py-1 rounded text-xs">
+                    Click to view
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Other media types */}
+        {otherMedia.map((item, index) => (
+          <div key={index} className="bg-foreground/5 rounded-lg p-3 border">
+            <div className="flex items-center gap-2">
+              <div className="text-sm">
+                {item.type === "video" && "🎥"}
+                {item.type === "audio" && "🎵"}
+                {item.type === "file" && "📎"}
+                {item.type === "gif" && "🎬"}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">
+                  {item.filename || `${item.type} attachment`}
+                </p>
+                {item.metadata?.size && (
+                  <p className="text-xs opacity-60">
+                    {(item.metadata.size / 1024 / 1024).toFixed(1)} MB
+                  </p>
+                )}
+              </div>
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-500 hover:text-blue-600 transition-colors"
+              >
+                Open
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Image Preview Modal */}
+      {selectedImage && (
+        <ImagePreviewModal
+          image={selectedImage}
+          isOpen={!!selectedImage}
+          onClose={() => setSelectedImage(null)}
+        />
+      )}
+    </>
+  );
+}
+
 export default function Message({
+  message,
   userAvatar,
   username,
-  messageType,
-  messageContent,
-  messageTimestamp,
 }: MessageProps) {
-  const timestamp = messageTimestamp
-    ? formatTimestamp(messageTimestamp, messageType === "system")
+  const timestamp = message.timestamp
+    ? formatTimestamp(message.timestamp, message.type === "system")
     : "";
 
   // Parse message content for formatting
-  const parsedContent = messageContent ? parseMessage(messageContent) : [];
+  const parsedContent = message.content ? parseMessage(message.content) : [];
 
-  switch (messageType) {
+  switch (message.type) {
     case "system":
       return (
         <article className="px-2 flex items-center gap-2">
           <div className="flex-grow min-h-[1px] bg-foreground/20"></div>
           <span className="pb-0.5 text-xs opacity-60">{timestamp}</span>
           <div className="flex-grow min-h-[1px] bg-foreground/20"></div>
-        </article>
-      );
-
-    case "media":
-      return (
-        <article className="py-2 flex items-start gap-3">
-          <section className="flex-shrink-0 mt-1">
-            <UserAvatar imageSrc={userAvatar || ""} alt={"Avatar"} />
-          </section>
-          <section className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <p className="text-kafuffle text-sm font-medium">{username}</p>
-              <span className="text-xs font-light opacity-50">{timestamp}</span>
-            </div>
-
-            {/* Media content would go here */}
-            <div className="bg-foreground/5 rounded-lg p-3 mb-2">
-              <p className="text-sm opacity-70">📎 Media attachment</p>
-            </div>
-
-            {/* Caption/message content */}
-            {messageContent && (
-              <div className="text-sm leading-relaxed">
-                {renderMessageParts(parsedContent)}
-              </div>
-            )}
-          </section>
         </article>
       );
 
@@ -118,9 +255,61 @@ export default function Message({
               <p className="text-kafuffle text-sm font-medium">{username}</p>
               <span className="text-xs font-light opacity-50">{timestamp}</span>
             </div>
-            <div className="text-sm leading-relaxed break-words">
-              {renderMessageParts(parsedContent)}
-            </div>
+
+            {/* Message content */}
+            {message.content && (
+              <div className="text-sm leading-relaxed break-words">
+                {renderMessageParts(parsedContent)}
+              </div>
+            )}
+
+            {/* Media attachments */}
+            {message.media && message.media.length > 0 && (
+              <MediaGrid media={message.media} />
+            )}
+
+            {/* Embeds would go here */}
+            {message.embed && message.embed.length > 0 && (
+              <div className="mt-2 space-y-2">
+                {message.embed.map((embed, index) => (
+                  <div
+                    key={index}
+                    className="border border-foreground/20 rounded-lg p-3 bg-foreground/5"
+                  >
+                    <div className="flex gap-3">
+                      {embed.image && (
+                        <img
+                          src={embed.image}
+                          alt={embed.title || "Embed"}
+                          className="w-16 h-16 object-cover rounded flex-shrink-0"
+                        />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        {embed.title && (
+                          <h4 className="font-medium text-sm mb-1 truncate">
+                            {embed.title}
+                          </h4>
+                        )}
+                        {embed.description && (
+                          <p className="text-xs opacity-70 line-clamp-2">
+                            {embed.description}
+                          </p>
+                        )}
+                        <a
+                          href={embed.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-500 hover:text-blue-600 transition-colors inline-flex items-center gap-1 mt-1"
+                        >
+                          <IconExternalLink size={12} />
+                          {new URL(embed.url).hostname}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
 
           {/* Message actions (visible on hover) */}

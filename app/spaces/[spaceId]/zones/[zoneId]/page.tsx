@@ -128,15 +128,13 @@ export default function ZonePage({
             allMessages.map((message) => (
               <Message
                 key={message.id}
+                message={message}
                 userAvatar={
                   users.find((user) => user.id === message.authorId)?.avatar
                 }
                 username={
                   users.find((user) => user.id === message.authorId)?.username
                 }
-                messageType={message.type}
-                messageContent={message.content}
-                messageTimestamp={message.timestamp}
               />
             ))
           ) : (

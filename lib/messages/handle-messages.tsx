@@ -1,13 +1,4 @@
-﻿interface Message {
-  id: string;
-  authorId: string;
-  type: string;
-  content: string;
-  timestamp: string;
-  replyToId: string | null;
-  spaceId: string;
-  zoneId: string;
-}
+﻿import { Message } from "@/lib/types/messages";
 
 const defaultMessage: Message = {
   id: "",

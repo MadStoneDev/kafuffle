@@ -1,4 +1,6 @@
-﻿export const messages = [
+﻿import { Message } from "@/lib/types/messages";
+
+export const messages: Message[] = [
   // Original messages (keeping for consistency)
   {
     id: "m1a2b3c4-d5e6-7890-abcd-ef1234567890",
@@ -793,6 +795,14 @@
     type: "media",
     content:
       "WE MADE IT TO TAHOE! 🏔️ Look at this incredible view! [Photo attached]",
+    media: [
+      {
+        type: "image",
+        url: "https://pixabay.com/get/gbdbcc91cd6eb74daea47af5c243840b68cc1d33977b34273ba614e4e657c433b717f4bc36b2b4e1d3224e592780573363e1c518c534a1567bb8114fdfa75e133_640.png",
+        filename: "nice-car.jpg",
+        description: "A beautiful car with a nice view",
+      },
+    ],
     timestamp: "2025-08-12T12:30:00.000Z",
     replyToId: null,
     spaceId: "space-1a2b-3c4d-5e6f-789012345678",
@@ -1008,6 +1018,14 @@
     type: "media",
     content:
       "Perfect ending to a perfect week! The Johnson Family Tahoe 2025! ❤️ [Photo attached]",
+    media: [
+      {
+        type: "image",
+        url: "https://pixabay.com/get/gbdbcc91cd6eb74daea47af5c243840b68cc1d33977b34273ba614e4e657c433b717f4bc36b2b4e1d3224e592780573363e1c518c534a1567bb8114fdfa75e133_640.png",
+        filename: "nice-car.jpg",
+        description: "A beautiful car with a nice view",
+      },
+    ],
     timestamp: "2025-08-15T21:00:00.000Z",
     replyToId: "fam-msg-093",
     spaceId: "space-1a2b-3c4d-5e6f-789012345678",
