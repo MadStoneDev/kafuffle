@@ -29,7 +29,7 @@ export default function ZonesSidebar({ spaceId }: ZonesSidebarProps) {
     return pathname.includes("/zones/") ? pathname.split("/zones/")[1] : null;
   }, [pathname]);
 
-  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<
     Record<string, boolean>
   >({});
@@ -86,12 +86,12 @@ export default function ZonesSidebar({ spaceId }: ZonesSidebarProps) {
       {sidebarExpanded && (
         <div
           onClick={toggleSidebar}
-          className="lg:hidden fixed inset-0 bg-background/70 z-40 transition-opacity duration-300"
+          className={`lg:hidden fixed inset-0 bg-background/70 z-0 transition-opacity duration-300`}
         />
       )}
 
       {/* Toggle Button */}
-      <div className="fixed right-0 flex z-50">
+      <div className={`fixed right-0 flex z-50`}>
         <button
           onClick={toggleSidebar}
           className={`
@@ -102,7 +102,7 @@ export default function ZonesSidebar({ spaceId }: ZonesSidebarProps) {
           `}
           title={sidebarExpanded ? "Collapse zones" : "Expand zones"}
         >
-          <div className="px-2 py-3">
+          <div className={`px-1.5 py-3`}>
             <IconChevronLeft
               size={20}
               className={`
@@ -113,7 +113,9 @@ export default function ZonesSidebar({ spaceId }: ZonesSidebarProps) {
             />
 
             {/* Subtle hover effect */}
-            <div className="absolute inset-0 bg-kafuffle/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div
+              className={`absolute inset-0 bg-kafuffle/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+            />
           </div>
         </button>
       </div>
@@ -121,25 +123,29 @@ export default function ZonesSidebar({ spaceId }: ZonesSidebarProps) {
       {/* Sidebar Content */}
       <div
         className={`
-          relative h-full bg-background border border-foreground/20 rounded-2xl
+          fixed top-0 right-0 md:relative h-full bg-background border border-foreground/20 md:rounded-2xl
           shadow-xl overflow-hidden transition-all duration-300 ease-out
           ${
             sidebarExpanded
               ? "w-[280px] opacity-100 translate-x-0"
               : "w-0 opacity-0 translate-x-4 pointer-events-none"
           }
-        `}
+        z-40 transition-all duration-300 ease-out`}
       >
         {/* Space Header */}
-        <div className="relative w-full h-[160px] bg-gradient-to-br from-kafuffle to-kafuffle/80 overflow-hidden">
+        <div
+          className={`relative w-full h-[160px] bg-gradient-to-br from-kafuffle to-kafuffle/80 overflow-hidden`}
+        >
           {/* Background pattern/texture */}
-          <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
+          <div
+            className={`absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10`}
+          />
 
           {space && (
-            <div className="absolute bottom-4 left-4 right-4 text-white">
-              <h2 className="text-lg font-semibold truncate">{space.name}</h2>
+            <div className={`absolute bottom-4 left-4 right-4 text-white`}>
+              <h2 className={`text-lg font-semibold truncate`}>{space.name}</h2>
               {space.description && (
-                <p className="text-sm opacity-90 line-clamp-2 mt-1">
+                <p className={`text-sm opacity-90 line-clamp-2 mt-1`}>
                   {space.description}
                 </p>
               )}
@@ -148,16 +154,20 @@ export default function ZonesSidebar({ spaceId }: ZonesSidebarProps) {
         </div>
 
         {/* Zones List */}
-        <div className="flex flex-col h-[calc(100%-160px)]">
-          <div className="flex-1 p-4 space-y-4 overflow-y-auto custom-scrollbar">
+        <div className={`flex flex-col h-[calc(100%-160px)]`}>
+          <div
+            className={`flex-1 p-4 space-y-4 overflow-y-auto custom-scrollbar`}
+          >
             {groupedZones.map((category) => (
-              <div key={category.id} className="space-y-2">
+              <div key={category.id} className={`space-y-2`}>
                 {/* Category Header */}
                 <button
                   onClick={() => toggleCategory(category.id)}
-                  className="w-full flex items-center justify-between text-left group"
+                  className={`w-full flex items-center justify-between text-left group`}
                 >
-                  <h3 className="text-sm font-medium text-foreground/80 group-hover:text-foreground transition-colors">
+                  <h3
+                    className={`text-sm font-medium text-foreground/80 group-hover:text-foreground transition-colors`}
+                  >
                     {category.name}
                   </h3>
                   <IconChevronDown
@@ -199,7 +209,9 @@ export default function ZonesSidebar({ spaceId }: ZonesSidebarProps) {
                         }
                       `}
                     >
-                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                      <div
+                        className={`flex items-center gap-2.5 min-w-0 flex-1`}
+                      >
                         <IconHash
                           size={18}
                           className={`
@@ -211,7 +223,7 @@ export default function ZonesSidebar({ spaceId }: ZonesSidebarProps) {
                             }
                           `}
                         />
-                        <span className="text-sm font-medium truncate">
+                        <span className={`text-sm font-medium truncate`}>
                           {zone.name}
                         </span>
                       </div>
@@ -236,22 +248,22 @@ export default function ZonesSidebar({ spaceId }: ZonesSidebarProps) {
           </div>
 
           {/* Add Zone Button */}
-          <div className="p-4 border-t border-foreground/10">
+          <div className={`p-4 border-t border-foreground/10`}>
             <button
-              className="
+              className={`
                 w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl
                 text-foreground/60 hover:text-kafuffle
                 hover:bg-kafuffle/10 border-2 border-dashed border-foreground/20
                 hover:border-kafuffle/40 transition-all duration-200
                 group
-              "
+              `}
               title="Add new zone"
             >
               <IconPlus
                 size={18}
-                className="group-hover:rotate-90 transition-transform duration-200"
+                className={`group-hover:rotate-90 transition-transform duration-200`}
               />
-              <span className="text-sm font-medium">Add Zone</span>
+              <span className={`text-sm font-medium`}>Add Zone</span>
             </button>
           </div>
         </div>

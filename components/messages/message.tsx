@@ -11,9 +11,11 @@ import {
   IconDots,
   IconX,
   IconExternalLink,
+  IconMoodWink,
 } from "@tabler/icons-react";
 
 import { Message as MessageType, MediaItem } from "@/lib/types/messages";
+import Link from "next/link";
 
 interface MessageProps {
   message: MessageType;
@@ -77,14 +79,14 @@ function ImagePreviewModal({ image, isOpen, onClose }: ImagePreviewModalProps) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+      className={`fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4`}
       onClick={handleBackdropClick}
     >
-      <div className="relative max-w-4xl max-h-full">
+      <div className={`relative max-w-4xl max-h-full`}>
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors"
+          className={`absolute -top-10 right-0 text-white hover:text-gray-300 transition-all duration-300 ease-in-out`}
           title="Close"
         >
           <IconX size={24} />
@@ -94,32 +96,34 @@ function ImagePreviewModal({ image, isOpen, onClose }: ImagePreviewModalProps) {
         <img
           src={image.url}
           alt={image.filename || "Image"}
-          className="max-w-full max-h-[80vh] object-contain rounded-lg"
+          className={`max-w-full max-h-[80vh] object-contain rounded-lg`}
         />
 
         {/* Image info and link */}
-        <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-3 rounded-b-lg">
-          <div className="flex items-center justify-between">
+        <div
+          className={`absolute bottom-0 left-0 right-0 bg-black/60 text-white p-3 rounded-b-lg`}
+        >
+          <div className={`flex items-center justify-between`}>
             <div>
               {image.filename && (
-                <p className="text-sm font-medium">{image.filename}</p>
+                <p className={`text-sm font-medium`}>{image.filename}</p>
               )}
               {image.metadata?.width && image.metadata?.height && (
-                <p className="text-xs opacity-80">
+                <p className={`text-xs opacity-80`}>
                   {image.metadata.width} × {image.metadata.height}
                 </p>
               )}
             </div>
-            <a
+            <Link
               href={image.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-sm hover:text-blue-300 transition-colors"
+              className={`flex items-center gap-1 text-sm hover:text-blue-300 transition-all duration-300 ease-in-out`}
               title="Open in new tab"
             >
               <IconExternalLink size={16} />
               Open original
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -142,7 +146,7 @@ function MediaGrid({ media }: MediaGridProps) {
 
   return (
     <>
-      <div className="mt-2 space-y-2 max-w-lg">
+      <div className={`mt-2 space-y-2 max-w-lg`}>
         {/* Image grid */}
         {images.length > 0 && (
           <div
@@ -159,16 +163,20 @@ function MediaGrid({ media }: MediaGridProps) {
             {images.map((image, index) => (
               <div
                 key={index}
-                className="relative cursor-pointer group overflow-hidden rounded-lg bg-foreground/5 border"
+                className={`relative cursor-pointer group overflow-hidden rounded-lg bg-foreground/5 border`}
                 onClick={() => setSelectedImage(image)}
               >
                 <img
                   src={image.url}
                   alt={image.filename || `Image ${index + 1}`}
-                  className="w-full h-[200px] object-cover transition-transform group-hover:scale-105"
+                  className={`w-full h-[200px] object-cover transition-transform group-hover:scale-105`}
                 />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 text-white px-2 py-1 rounded text-xs">
+                <div
+                  className={`absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center`}
+                >
+                  <div
+                    className={`opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 text-white px-2 py-1 rounded text-xs`}
+                  >
                     Click to view
                   </div>
                 </div>
@@ -179,32 +187,32 @@ function MediaGrid({ media }: MediaGridProps) {
 
         {/* Other media types */}
         {otherMedia.map((item, index) => (
-          <div key={index} className="bg-foreground/5 rounded-lg p-3 border">
-            <div className="flex items-center gap-2">
-              <div className="text-sm">
+          <div key={index} className={`bg-foreground/5 rounded-lg p-3 border`}>
+            <div className={`flex items-center gap-2`}>
+              <div className={`text-sm`}>
                 {item.type === "video" && "🎥"}
                 {item.type === "audio" && "🎵"}
                 {item.type === "file" && "📎"}
                 {item.type === "gif" && "🎬"}
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">
+              <div className={`flex-1`}>
+                <p className={`text-sm font-medium`}>
                   {item.filename || `${item.type} attachment`}
                 </p>
                 {item.metadata?.size && (
-                  <p className="text-xs opacity-60">
+                  <p className={`text-xs opacity-60`}>
                     {(item.metadata.size / 1024 / 1024).toFixed(1)} MB
                   </p>
                 )}
               </div>
-              <a
+              <Link
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-blue-500 hover:text-blue-600 transition-colors"
+                className={`text-xs text-blue-500 hover:text-blue-600 transition-colors`}
               >
                 Open
-              </a>
+              </Link>
             </div>
           </div>
         ))}
@@ -237,26 +245,54 @@ export default function Message({
   switch (message.type) {
     case "system":
       return (
-        <article className="px-2 flex items-center gap-2">
-          <div className="flex-grow min-h-[1px] bg-foreground/20"></div>
-          <span className="pb-0.5 text-xs opacity-60">{timestamp}</span>
-          <div className="flex-grow min-h-[1px] bg-foreground/20"></div>
+        <article className={`px-2 flex items-center gap-2`}>
+          <div className={`flex-grow min-h-[1px] bg-foreground/20`}></div>
+          <span className={`pb-0.5 text-xs opacity-60`}>{timestamp}</span>
+          <div className={`flex-grow min-h-[1px] bg-foreground/20`}></div>
         </article>
       );
 
     default:
       return (
-        <article className="py-2 flex items-start gap-3 group hover:bg-foreground/5 -mx-3 px-3 rounded-lg transition-colors">
-          <section className="flex-shrink-0 mt-1">
+        <article className="group -mx-3 pl-4 pr-3 py-2 flex flex-row items-start gap-3 hover:bg-foreground/5 rounded-lg transition-all duration-300 ease-in-out">
+          <section className="mt-1">
             <UserAvatar imageSrc={userAvatar || ""} alt={"Avatar"} />
           </section>
-          <section className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <p className="text-kafuffle text-sm font-medium">{username}</p>
-              <span className="text-xs font-light opacity-50">{timestamp}</span>
+
+          <section className="flex-1">
+            {/* Header with username, timestamp, and actions */}
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                <p className="text-kafuffle text-sm font-medium">{username}</p>
+                <span className="text-xs font-light opacity-50">
+                  {timestamp}
+                </span>
+              </div>
+
+              {/* Message actions (visible on hover) */}
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                <button
+                  className="p-1 hover:bg-foreground/10 rounded text-xs opacity-70 hover:opacity-100"
+                  title="Add reaction"
+                >
+                  <IconMoodWink size={18} />
+                </button>
+                <button
+                  className="p-1 hover:bg-foreground/10 rounded text-xs opacity-70 hover:opacity-100"
+                  title="Reply"
+                >
+                  <IconCornerDownLeft size={16} />
+                </button>
+                <button
+                  className="p-1 hover:bg-foreground/10 rounded text-xs opacity-70 hover:opacity-100"
+                  title="More options"
+                >
+                  <IconDots size={16} />
+                </button>
+              </div>
             </div>
 
-            {/* Message content */}
+            {/* Message content - now takes full width */}
             {message.content && (
               <div className="text-sm leading-relaxed break-words">
                 {renderMessageParts(parsedContent)}
@@ -268,7 +304,7 @@ export default function Message({
               <MediaGrid media={message.media} />
             )}
 
-            {/* Embeds would go here */}
+            {/* Embeds */}
             {message.embed && message.embed.length > 0 && (
               <div className="mt-2 space-y-2">
                 {message.embed.map((embed, index) => (
@@ -295,43 +331,23 @@ export default function Message({
                             {embed.description}
                           </p>
                         )}
-                        <a
+
+                        <Link
                           href={embed.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs text-blue-500 hover:text-blue-600 transition-colors inline-flex items-center gap-1 mt-1"
+                          className="text-xs text-blue-500 hover:text-blue-600 transition-colors inline-flex
+                              items-center gap-1 mt-1"
                         >
                           <IconExternalLink size={12} />
                           {new URL(embed.url).hostname}
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             )}
-          </section>
-
-          {/* Message actions (visible on hover) */}
-          <section className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 mt-1">
-            <button
-              className="p-1 hover:bg-foreground/10 rounded text-xs opacity-70 hover:opacity-100"
-              title="Add reaction"
-            >
-              <IconMoodSmile size={14} />
-            </button>
-            <button
-              className="p-1 hover:bg-foreground/10 rounded text-xs opacity-70 hover:opacity-100"
-              title="Reply"
-            >
-              <IconCornerDownLeft size={14} />
-            </button>
-            <button
-              className="p-1 hover:bg-foreground/10 rounded text-xs opacity-70 hover:opacity-100"
-              title="More options"
-            >
-              <IconDots size={14} />
-            </button>
           </section>
         </article>
       );

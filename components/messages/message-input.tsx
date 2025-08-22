@@ -199,10 +199,10 @@ export default function MessageInput({
   };
 
   return (
-    <div className="p-2 relative">
+    <div className={`p-2 relative`}>
       {/* Emoji Picker */}
       {showEmojiPicker && (
-        <div className="absolute bottom-16 right-4 z-50">
+        <div className={`absolute bottom-16 right-4 z-50`}>
           <EmojiPicker
             onEmojiClick={handleEmojiClick}
             width={300}
@@ -218,14 +218,18 @@ export default function MessageInput({
 
       {/* Mentions Dropdown */}
       {showMentions && filteredUsers.length > 0 && (
-        <div className="absolute bottom-16 left-4 z-50 bg-background border border-foreground/20 rounded-lg shadow-lg p-1 min-w-[250px] max-h-[200px] overflow-y-auto">
+        <div
+          className={`absolute bottom-16 left-4 z-50 bg-background border border-foreground/20 rounded-lg shadow-lg p-1 min-w-[250px] max-h-[200px] overflow-y-auto`}
+        >
           {filteredUsers.slice(0, 8).map((user) => (
             <button
               key={user.id}
               onClick={() => handleMentionClick(user)}
-              className="w-full text-left px-3 py-2 hover:bg-foreground/10 rounded-md flex items-center gap-2"
+              className={`w-full text-left px-3 py-2 hover:bg-foreground/10 rounded-md flex items-center gap-2`}
             >
-              <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">
+              <div
+                className={`w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs`}
+              >
                 {user.username[0].toUpperCase()}
               </div>
               <span>{user.username}</span>
@@ -236,42 +240,52 @@ export default function MessageInput({
 
       {/* Attachment Menu */}
       {showAttachments && (
-        <div className="absolute bottom-16 left-4 z-50 bg-background border border-foreground/20 rounded-lg shadow-lg p-2 min-w-[200px]">
-          <div className="space-y-1">
+        <div
+          className={`absolute bottom-16 left-4 z-50 bg-background border border-foreground/20 rounded-lg shadow-lg p-2 min-w-[200px]`}
+        >
+          <div className={`space-y-1`}>
             <button
               onClick={() => console.log("Upload image")}
-              className="w-full text-left px-3 py-2 hover:bg-foreground/10 rounded-md flex items-center gap-2 transition-colors"
+              className={`w-full text-left px-3 py-2 hover:bg-foreground/10 rounded-md flex items-center gap-2 transition-all duration-300 ease-in-out`}
             >
               <IconPhoto size={16} />
               Upload Image
-              <span className="text-xs opacity-50 ml-auto">PNG, JPG, GIF</span>
+              <span className={`text-xs opacity-50 ml-auto`}>
+                PNG, JPG, GIF
+              </span>
             </button>
 
             <button
               onClick={() => console.log("Upload audio")}
-              className="w-full text-left px-3 py-2 hover:bg-foreground/10 rounded-md flex items-center gap-2 transition-colors"
+              className={`w-full text-left px-3 py-2 hover:bg-foreground/10 rounded-md flex items-center gap-2 transition-all duration-300 ease-in-out`}
             >
               <IconMusic size={16} />
               Upload Audio
-              <span className="text-xs opacity-50 ml-auto">MP3, WAV, M4A</span>
+              <span className={`text-xs opacity-50 ml-auto`}>
+                MP3, WAV, M4A
+              </span>
             </button>
 
             <button
               onClick={() => console.log("Upload video")}
-              className="w-full text-left px-3 py-2 hover:bg-foreground/10 rounded-md flex items-center gap-2 transition-colors"
+              className={`w-full text-left px-3 py-2 hover:bg-foreground/10 rounded-md flex items-center gap-2 transition-all duration-300 ease-in-out`}
             >
               <IconVideo size={16} />
               Upload Video
-              <span className="text-xs opacity-50 ml-auto">MP4, MOV, AVI</span>
+              <span className={`text-xs opacity-50 ml-auto`}>
+                MP4, MOV, AVI
+              </span>
             </button>
 
             <button
               onClick={() => console.log("Upload document")}
-              className="w-full text-left px-3 py-2 hover:bg-foreground/10 rounded-md flex items-center gap-2 transition-colors"
+              className={`w-full text-left px-3 py-2 hover:bg-foreground/10 rounded-md flex items-center gap-2 transition-all duration-300 ease-in-out`}
             >
               <IconFile size={16} />
               Upload Document
-              <span className="text-xs opacity-50 ml-auto">PDF, DOC, TXT</span>
+              <span className={`text-xs opacity-50 ml-auto`}>
+                PDF, DOC, TXT
+              </span>
             </button>
           </div>
         </div>
@@ -280,7 +294,7 @@ export default function MessageInput({
       {/* Overlay to close dropdowns */}
       {(showEmojiPicker || showAttachments || showMentions) && (
         <div
-          className="fixed inset-0 z-40"
+          className={`fixed inset-0 z-40`}
           onClick={() => {
             setShowEmojiPicker(false);
             setShowAttachments(false);
@@ -290,55 +304,59 @@ export default function MessageInput({
       )}
 
       {/* Formatting Toolbar */}
-      {/*<div className="flex items-center gap-1 mb-2 px-2">*/}
+      {/*<div className={`flex items-center gap-1 mb-2 px-2`}>*/}
       {/*  <button*/}
       {/*    onClick={() => handleFormatting("bold")}*/}
-      {/*    className="p-1 rounded hover:bg-foreground/10 opacity-70 hover:opacity-100 transition-all"*/}
+      {/*    className={`p-1 rounded hover:bg-foreground/10 opacity-70 hover:opacity-100 transition-all"*/}
       {/*    title="Bold (Ctrl+B)"*/}
       {/*  >*/}
       {/*    <IconBold size={16} />*/}
       {/*  </button>*/}
       {/*  <button*/}
       {/*    onClick={() => handleFormatting("italic")}*/}
-      {/*    className="p-1 rounded hover:bg-foreground/10 opacity-70 hover:opacity-100 transition-all"*/}
+      {/*    className={`p-1 rounded hover:bg-foreground/10 opacity-70 hover:opacity-100 transition-all"*/}
       {/*    title="Italic (Ctrl+I)"*/}
       {/*  >*/}
       {/*    <IconItalic size={16} />*/}
       {/*  </button>*/}
-      {/*  <div className="text-xs opacity-50 ml-2">*/}
+      {/*  <div className={`text-xs opacity-50 ml-2`}>*/}
       {/*    **bold** *italic* @mention*/}
       {/*  </div>*/}
       {/*</div>*/}
 
       {/* Input Container */}
-      <div className="px-2 flex items-center gap-2 w-full rounded-2xl border border-foreground/20 dark:border-neutral-700 bg-foreground/5 text-sm font-light overflow-hidden transition-all duration-300 ease-in-out">
+      <div
+        className={`px-1 flex items-center gap-2 w-full rounded-2xl border border-foreground/20 dark:border-neutral-700 bg-foreground/5 text-sm font-light overflow-hidden transition-all duration-300 ease-in-out`}
+      >
         {/* Attachment Button */}
         <button
           onClick={handleAttachmentClick}
-          className="opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out p-2"
+          className={`p-1 opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out`}
         >
           <IconCirclePlus />
         </button>
 
         {/* Text Input */}
-        <div className="flex-1 py-2">
+        <div className={`flex-1 py-2`}>
           <textarea
             ref={textareaRef}
             value={message}
             onChange={handleTextareaChange}
             onKeyDown={handleKeyDown}
             placeholder={`Type a message in #${zoneName}...`}
-            className="w-full bg-transparent outline-none resize-none min-h-[24px] max-h-[120px] leading-6"
+            className={`w-full bg-transparent outline-none resize-none min-h-[24px] max-h-[120px] leading-6`}
             rows={1}
           />
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-1 transition-all duration-300 ease-in-out">
+        <div
+          className={`flex items-center gap-1 transition-all duration-300 ease-in-out`}
+        >
           {/* Emoji Button */}
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            className="opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out p-1"
+            className={`opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out p-1`}
           >
             <IconMoodWink />
           </button>
@@ -347,7 +365,7 @@ export default function MessageInput({
           {message.trim() && (
             <button
               onClick={handleSendMessage}
-              className="text-kafuffle hover:text-kafuffle/70 transition-all duration-300 ease-in-out p-1"
+              className={`text-kafuffle hover:text-kafuffle/70 transition-all duration-300 ease-in-out p-1`}
             >
               <IconSend size={20} />
             </button>
@@ -356,7 +374,7 @@ export default function MessageInput({
       </div>
 
       {/* Helper Text */}
-      <div className="text-xs opacity-50 mt-1 px-2">
+      <div className={`text-xs opacity-50 mt-1 px-2`}>
         Press Enter to send, Shift+Enter for new line • Ctrl+B for bold, Ctrl+I
         for italic • @ to mention
       </div>

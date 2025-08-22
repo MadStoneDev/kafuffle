@@ -18,9 +18,9 @@ export default async function SpacesLayout({
       <SpaceHeader spaceId={spaceId} />
 
       {/* Content Area */}
-      <div className="relative pl-4 py-4 pt-0 flex items-stretch overflow-hidden">
+      <div className="flex-1 relative pl-3 sm:pl-4 py-4 pt-0 flex items-stretch overflow-hidden">
         {/* Main Content */}
-        <section className="mr-4 flex-grow flex flex-col justify-end rounded-2xl border border-foreground/20 overflow-hidden">
+        <section className="mr-3 sm:mr-4 flex-grow flex flex-col justify-end rounded-2xl border border-foreground/20 overflow-hidden">
           {children}
         </section>
 
