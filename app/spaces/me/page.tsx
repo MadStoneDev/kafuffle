@@ -13,7 +13,7 @@ export default function SpacesMePage() {
     >
       {/* Chat */}
       <section
-        className={`flex-grow flex flex-col justify-end rounded-3xl border border-foreground/20 overflow-hidden`}
+        className={`flex-grow flex flex-col justify-end rounded-2xl border border-foreground/20 overflow-hidden`}
       ></section>
 
       {/* Zones */}
@@ -48,7 +48,7 @@ export default function SpacesMePage() {
             sidebarExpanded
               ? "max-w-[275px] border-foreground/20"
               : "max-w-0 border-transparent"
-          } lg:max-w-[275px] h-full bg-background lg:rounded-3xl border lg:border-foreground/20 overflow-hidden transition-all duration-300 ease-in-out`}
+          } lg:max-w-[275px] h-full bg-background lg:rounded-2xl border lg:border-foreground/20 overflow-hidden transition-all duration-300 ease-in-out`}
         >
           {/* Zones List */}
           <div className={`p-3 flex flex-col gap-3 overflow-y-auto`}></div>

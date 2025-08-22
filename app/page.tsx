@@ -30,7 +30,6 @@ export default function Home() {
             "https://res.cloudinary.com/duhygs5ck/image/upload/f_auto,q_auto/v1740646396/avatar2.jpg"
           }
           alt={"Avatar"}
-          active={true}
         />
 
         <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">

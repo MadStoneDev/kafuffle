@@ -1,7 +1,7 @@
 ﻿// /app/spaces/[spaceId]/layout.tsx
 import { ReactNode } from "react";
-import SpacesSidebar from "@/components/user/spaces-sidebar";
 import ZonesSidebar from "@/components/user/zones-sidebar";
+import SpaceHeader from "@/components/user/space-header";
 
 export default async function SpacesLayout({
   children,
@@ -13,14 +13,14 @@ export default async function SpacesLayout({
   const { spaceId } = await params;
 
   return (
-    <main className="flex h-screen bg-background overflow-hidden">
-      {/* Spaces Sidebar (left) */}
-      <SpacesSidebar spaceId={spaceId} />
+    <main className="flex flex-col w-full h-screen overflow-hidden">
+      {/* Header Bar */}
+      <SpaceHeader spaceId={spaceId} />
 
       {/* Content Area */}
-      <div className="relative py-4 pr-4 flex items-stretch gap-3 w-full h-screen">
+      <div className="relative pl-4 py-4 pt-0 flex items-stretch overflow-hidden">
         {/* Main Content */}
-        <section className="flex-grow flex flex-col justify-end rounded-3xl border border-foreground/20 overflow-hidden">
+        <section className="mr-4 flex-grow flex flex-col justify-end rounded-2xl border border-foreground/20 overflow-hidden">
           {children}
         </section>
 
