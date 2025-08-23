@@ -25,18 +25,15 @@ export default function SpaceHeader({ spaceId }: SpaceHeaderProps) {
 
   return (
     <header
-      className={`px-3 sm:px-4 py-4 flex items-center justify-between transition-all duration-300 ease-in-out`}
+      className={`px-[3.7rem] py-1 flex items-center justify-between transition-all duration-300 ease-in-out`}
     >
-      <div className={`flex items-center`}>
+      <div className={`flex items-center gap-1`}>
         <Link
           href={`/spaces`}
-          className={`p-2 hover:bg-foreground/10 rounded-lg transition-all duration-300 ease-in-out group`}
+          className={`p-1 hover:bg-foreground rounded-lg hover:text-background transition-all duration-300 ease-in-out group`}
           title="Back to spaces"
         >
-          <IconArrowLeft
-            size={24}
-            className={`text-foreground transition-all duration-300 ease-in-out`}
-          />
+          <IconArrowLeft size={24} />
         </Link>
 
         <div className={`flex items-center gap-3`}>
@@ -61,7 +58,7 @@ export default function SpaceHeader({ spaceId }: SpaceHeaderProps) {
       <div className={`flex items-center gap-2`}>
         {/* Members count (optional) */}
         <button
-          className={`hidden md:flex items-center gap-2 px-3 py-2 hover:bg-foreground/10 rounded-lg transition-colors text-sm text-foreground/60 hover:text-foreground`}
+          className={`p-2 hidden md:flex border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
           title="View members"
         >
           <IconUsers size={16} />
@@ -70,7 +67,7 @@ export default function SpaceHeader({ spaceId }: SpaceHeaderProps) {
 
         {/* Notifications */}
         <button
-          className={`p-2 hidden md:flex hover:bg-foreground/10 rounded-lg transition-colors text-foreground/60 hover:text-foreground`}
+          className={`p-2 hidden md:flex border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
           title="Notifications"
         >
           <IconNotification size={18} />
@@ -78,7 +75,7 @@ export default function SpaceHeader({ spaceId }: SpaceHeaderProps) {
 
         {/* Settings */}
         <button
-          className={`p-2 hidden md:flex hover:bg-foreground/10 rounded-lg transition-colors text-foreground/60 hover:text-foreground`}
+          className={`p-2 hidden md:flex border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
           title="Space settings"
         >
           <IconSettings size={18} />
@@ -86,7 +83,7 @@ export default function SpaceHeader({ spaceId }: SpaceHeaderProps) {
 
         {/* More options */}
         <button
-          className={`p-2 border hover:bg-foreground/10 rounded-lg transition-colors text-foreground/60 hover:text-foreground`}
+          className={`p-2 border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
           title="More options"
         >
           <IconDots size={18} />

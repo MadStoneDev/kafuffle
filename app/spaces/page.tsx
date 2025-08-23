@@ -7,11 +7,15 @@ import Link from "next/link";
 
 export default function SpacesListPage() {
   return (
-    <div
-      className={`p-3 sm:p-4 md:p-8 flex flex-col items-center justify-start gap-4 h-screen bg-background transition-all duration-300 ease-in-out`}
+    <main
+      className={`p-3 sm:p-4 md:p-8 flex flex-col items-center justify-start gap-4 h-full bg-background transition-all duration-300 ease-in-out`}
     >
       <Link href={"/"} className={`p-2 bg-kafuffle`}>
-        <img src={`/kafuffle-symbol.svg`} className={`mx-auto h-8 w-auto`} />
+        <img
+          src={`/kafuffle-symbol.svg`}
+          className={`mx-auto h-8 w-auto`}
+          alt={`Kafuffle Logo`}
+        />
       </Link>
 
       <div className={`text-center mb-4`}>
@@ -19,7 +23,7 @@ export default function SpacesListPage() {
         <p className={`text-foreground/60`}>Select a space to start chatting</p>
       </div>
 
-      <div className={`pb-4 grid grid-cols-1 gap-2`}>
+      <section className={`pb-2 grid grid-cols-1 gap-2`}>
         {spaces.map((space) => (
           <Link
             key={space.id}
@@ -38,7 +42,18 @@ export default function SpacesListPage() {
             </div>
           </Link>
         ))}
-      </div>
-    </div>
+      </section>
+
+      <footer className={`text-xs text-center text-foreground/30`}>
+        Copyright 2015. Kafuffle was built by{" "}
+        <Link
+          href={`https://madstone.dev`}
+          className={`hover:text-kafuffle transition-all duration-300 ease-in-out`}
+        >
+          MadStone Dev
+        </Link>
+        .
+      </footer>
+    </main>
   );
 }

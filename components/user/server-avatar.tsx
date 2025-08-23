@@ -16,7 +16,7 @@ const ServerAvatar = ({
   return (
     <article className={`group relative inline-block ${className}`}>
       <div
-        className={`grid place-content-center w-14 aspect-square bg-cover bg-center rounded-full ${imageClassName} transition-all duration-300 ease-in-out`}
+        className={`grid place-content-center w-[3.6rem] aspect-square bg-cover bg-center rounded-full ${imageClassName} transition-all duration-300 ease-in-out`}
         style={{
           backgroundImage: `url(${imageSrc})`,
         }}
