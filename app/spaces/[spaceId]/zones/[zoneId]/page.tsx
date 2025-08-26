@@ -2,7 +2,6 @@
 "use client";
 
 import { use, useEffect, useRef, useState } from "react";
-import { IconCirclePlus, IconMoodWink } from "@tabler/icons-react";
 
 import Message from "@/components/messages/message";
 import processMessages from "@/lib/messages/handle-messages";
@@ -97,7 +96,7 @@ export default function ZonePage({
         <div className="text-center">
           <h2 className="text-xl">Invalid zone</h2>
           <p className="text-sm opacity-70">
-            This zone doesn't belong to this space
+            This zone doesn&apos;t belong to this space
           </p>
         </div>
       </div>

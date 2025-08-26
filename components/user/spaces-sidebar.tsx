@@ -9,16 +9,11 @@ import {
 import { useState } from "react";
 import ServerNavigation from "@/components/user/server-navigation";
 
-import { spaces } from "@/lib/dummy-data/spaces";
-
 interface SpacesSidebarProps {
   spaceId: string | undefined;
 }
 
 export default function SpacesSidebar({ spaceId }: SpacesSidebarProps) {
-  // Constants
-  const space = spaces.find((space) => space.id === spaceId);
-
   // States
   const [isExpanded, setIsExpanded] = useState(false);
 

@@ -20,6 +20,8 @@ const ServerAvatar = ({
         style={{
           backgroundImage: `url(${imageSrc})`,
         }}
+        role="img"
+        aria-label={alt}
       >
         {innerElement}
       </div>

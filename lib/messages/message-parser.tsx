@@ -9,7 +9,6 @@ export interface ParsedMessagePart {
 
 export function parseMessage(content: string): ParsedMessagePart[] {
   const parts: ParsedMessagePart[] = [];
-  let currentIndex = 0;
 
   // Split by newlines first to preserve them
   const lines = content.split("\n");

@@ -7,7 +7,8 @@ import {
   IconSettings,
   IconDots,
   IconUsers,
-  IconNotification,
+  IconBell,
+  IconPin,
 } from "@tabler/icons-react";
 import { spaces } from "@/lib/dummy-data/spaces";
 import ServerAvatar from "./server-avatar";
@@ -55,27 +56,35 @@ export default function SpaceHeader({ spaceId }: SpaceHeaderProps) {
       </div>
 
       {/* Right: Action buttons */}
-      <div className={`flex items-center gap-2`}>
+      <div className={`flex items-stretch gap-2`}>
         {/* Members count (optional) */}
         <button
-          className={`p-2 hidden md:flex border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
+          className={`p-1.5 hidden md:flex items-center gap-1 border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
           title="View members"
         >
           <IconUsers size={16} />
           <span>12</span>
         </button>
 
+        {/* Pinned Posts */}
+        <button
+          className={`p-2 hidden md:flex items-center border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
+          title="Space settings"
+        >
+          <IconPin size={18} />
+        </button>
+
         {/* Notifications */}
         <button
-          className={`p-2 hidden md:flex border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
+          className={`p-2 hidden md:flex items-center border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
           title="Notifications"
         >
-          <IconNotification size={18} />
+          <IconBell size={18} />
         </button>
 
         {/* Settings */}
         <button
-          className={`p-2 hidden md:flex border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
+          className={`p-2 hidden md:flex items-center border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
           title="Space settings"
         >
           <IconSettings size={18} />
@@ -83,7 +92,7 @@ export default function SpaceHeader({ spaceId }: SpaceHeaderProps) {
 
         {/* More options */}
         <button
-          className={`p-2 border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
+          className={`p-2 flex items-center border border-foreground/30 hover:bg-foreground rounded-lg text-foreground hover:text-background transition-all duration-300 ease-in-out`}
           title="More options"
         >
           <IconDots size={18} />

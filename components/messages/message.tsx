@@ -6,7 +6,6 @@ import {
   renderMessageParts,
 } from "@/lib/messages/message-parser";
 import {
-  IconMoodSmile,
   IconCornerDownLeft,
   IconDots,
   IconX,

@@ -1,13 +1,11 @@
 ﻿// /components/messages/message-input.tsx
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import {
   IconCirclePlus,
   IconMoodWink,
   IconSend,
-  IconBold,
-  IconItalic,
   IconPhoto,
   IconMusic,
   IconVideo,
@@ -38,7 +36,7 @@ export default function MessageInput({
     user.username.toLowerCase().includes(mentionQuery.toLowerCase()),
   );
 
-  const handleEmojiClick = (emojiData: any) => {
+  const handleEmojiClick = (emojiData: { emoji: string }) => {
     const emoji = emojiData.emoji;
     insertAtCursor(emoji);
     setShowEmojiPicker(false);
@@ -96,11 +94,11 @@ export default function MessageInput({
     }, 0);
   };
 
-  const handleMentionClick = (user: any) => {
+  const handleMentionClick = (user: { id: string; username: string }) => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
-    const beforeMention = message.slice(0, mentionPosition - 1); // -1 to remove @
+    const beforeMention = message.slice(0, mentionPosition - 1);
     const afterMention = message.slice(textarea.selectionStart);
     const mentionText = `@${user.username} `;
 

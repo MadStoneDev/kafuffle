@@ -59,6 +59,7 @@ export async function updateSession(request: NextRequest) {
 
   if (
     !allowPaths.includes(request.nextUrl.pathname) &&
+    !request.nextUrl.pathname.startsWith("/me") &&
     !request.nextUrl.pathname.startsWith("/spaces") && // Add this check
     !user &&
     !request.nextUrl.pathname.startsWith("/login") &&

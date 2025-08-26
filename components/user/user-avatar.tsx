@@ -18,6 +18,8 @@ const UserAvatar = ({
         style={{
           backgroundImage: `url(${imageSrc})`,
         }}
+        role="img"
+        aria-label={alt}
       />
     </article>
   );

@@ -32,7 +32,6 @@ export default function ServerNavigation({
       >
         <ServerAvatar
           alt={"Kafuffle Logo"}
-          active={selectedSpaceId === 0}
           innerElement={
             <img
               src={"/kafuffle-symbol.svg"}
@@ -63,7 +62,6 @@ export default function ServerNavigation({
                 "https://res.cloudinary.com/duhygs5ck/image/upload/f_auto,q_auto/v1740646396/avatar2.jpg"
               }
               alt={"Avatar"}
-              active={selectedSpaceId === index + 1}
             />
           </Link>
         ))}

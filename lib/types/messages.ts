@@ -16,7 +16,7 @@ export interface MediaItem {
   url: string;
   filename?: string;
   description?: string;
-  metadata?: Record<string, any>;
+  metadata?: MediaMetadata;
 }
 
 export interface EmbedItem {
@@ -32,5 +32,13 @@ export interface EmbedItem {
   title?: string;
   description?: string;
   image?: string;
-  metadata?: Record<string, any>;
+  metadata?: MediaMetadata;
+}
+
+export interface MediaMetadata {
+  size?: number;
+  width?: number;
+  height?: number;
+  duration?: number;
+  mimeType?: string;
 }
